@@ -327,7 +327,7 @@ export default function AdminDashboardPage() {
           <div className="flex flex-col sm:flex-row gap-2.5">
             {/* Search Input */}
             <div className="relative flex-1">
-              <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-[#6b7280]">
+              <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-[#6b7280]">
                 <Search className="w-4 h-4" />
               </div>
               <input
@@ -335,7 +335,7 @@ export default function AdminDashboardPage() {
                 value={search}
                 onChange={(e) => setSearch(e.target.value)}
                 placeholder="Search volunteer name, phone, station..."
-                className="ios-input pl-9 text-xs"
+                className="ios-input ios-input-icon !pl-10 text-xs"
               />
               {search && (
                 <button

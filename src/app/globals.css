@@ -52,6 +52,20 @@
   width: 100%;
 }
 
+/* High-priority padding for inputs/selects with left icons so placeholders never overlap */
+.ios-input-icon,
+.ios-input.has-left-icon,
+.ios-input.pl-10,
+.ios-input.pl-11,
+.ios-input.pl-9 {
+  padding-left: 2.75rem !important; /* 44px: leaves ample room after 16px icon */
+}
+
+.ios-select-icon {
+  padding-left: 2.75rem !important;
+  padding-right: 2.25rem !important;
+}
+
 .ios-input:focus {
   border-color: #8e524d;
   box-shadow: 0 0 0 2px rgba(142, 82, 77, 0.18);

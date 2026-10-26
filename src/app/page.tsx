@@ -445,7 +445,7 @@ export default function VolunteerRegistrationPage() {
                       Full Legal Name <span className="text-red-500">*</span>
                     </label>
                     <div className="relative">
-                      <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-[#6b6463]">
+                      <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-[#6b6463]">
                         <User className="w-4 h-4" />
                       </div>
                       <input
@@ -454,7 +454,7 @@ export default function VolunteerRegistrationPage() {
                         value={fullName}
                         onChange={(e) => setFullName(e.target.value)}
                         placeholder="e.g. Wycliffe Omwitsa"
-                        className="ios-input pl-10"
+                        className="ios-input ios-input-icon !pl-11"
                       />
                     </div>
                   </div>
@@ -465,7 +465,7 @@ export default function VolunteerRegistrationPage() {
                       Mobile Phone Number <span className="text-red-500">*</span>
                     </label>
                     <div className="relative">
-                      <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-[#6b6463]">
+                      <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-[#6b6463]">
                         <Phone className="w-4 h-4" />
                       </div>
                       <input
@@ -474,7 +474,7 @@ export default function VolunteerRegistrationPage() {
                         value={phoneNumber}
                         onChange={(e) => setPhoneNumber(e.target.value)}
                         placeholder="0712 345 678 or +254 7..."
-                        className="ios-input pl-10"
+                        className="ios-input ios-input-icon !pl-11"
                       />
                     </div>
                     <p className="text-[10px] text-[#6b6463] mt-1 pl-0.5">
@@ -490,7 +490,7 @@ export default function VolunteerRegistrationPage() {
                       <span className="text-[10px] font-normal text-[#6b6463]">(Optional)</span>
                     </label>
                     <div className="relative">
-                      <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-[#6b6463]">
+                      <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-[#6b6463]">
                         <Briefcase className="w-4 h-4" />
                       </div>
                       <input
@@ -498,7 +498,7 @@ export default function VolunteerRegistrationPage() {
                         value={occupation}
                         onChange={(e) => setOccupation(e.target.value)}
                         placeholder="e.g. Teacher, Farmer, Business, Boda Boda..."
-                        className="ios-input pl-10"
+                        className="ios-input ios-input-icon !pl-11"
                       />
                     </div>
                   </div>
@@ -511,14 +511,14 @@ export default function VolunteerRegistrationPage() {
                         Select Ward <span className="text-red-500">*</span>
                       </label>
                       <div className="relative">
-                        <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-[#6b6463]">
+                        <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-[#6b6463]">
                           <MapPin className="w-4 h-4" />
                         </div>
                         <select
                           required
                           value={ward}
                           onChange={handleWardChange}
-                          className="ios-input pl-10 pr-9 appearance-none bg-white cursor-pointer"
+                          className="ios-input ios-input-icon ios-select-icon !pl-11 !pr-9 appearance-none bg-white cursor-pointer"
                         >
                           <option value="">-- Choose Ward --</option>
                           {matunguWards.map((w) => (
@@ -546,7 +546,7 @@ export default function VolunteerRegistrationPage() {
                         )}
                       </div>
                       <div className="relative">
-                        <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-[#6b6463]">
+                        <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-[#6b6463]">
                           <Vote className="w-4 h-4" />
                         </div>
                         <select
@@ -554,7 +554,7 @@ export default function VolunteerRegistrationPage() {
                           disabled={!ward}
                           value={pollingStation}
                           onChange={handleStationChange}
-                          className="ios-input pl-10 pr-9 appearance-none bg-white cursor-pointer disabled:bg-[#f4efed] disabled:text-[#6b6463] disabled:cursor-not-allowed"
+                          className="ios-input ios-input-icon ios-select-icon !pl-11 !pr-9 appearance-none bg-white cursor-pointer disabled:bg-[#f4efed] disabled:text-[#6b6463] disabled:cursor-not-allowed"
                         >
                           <option value="">
                             {ward
@@ -589,7 +589,7 @@ export default function VolunteerRegistrationPage() {
                         </p>
                       </div>
                       <div className="relative">
-                        <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-[#6b6463]">
+                        <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-[#6b6463]">
                           <MapPin className="w-4 h-4" />
                         </div>
                         <input
@@ -597,7 +597,7 @@ export default function VolunteerRegistrationPage() {
                           value={otherStationText}
                           onChange={(e) => setOtherStationText(e.target.value)}
                           placeholder="e.g. Lugari Primary, near Matungu Market..."
-                          className="ios-input pl-10"
+                          className="ios-input ios-input-icon !pl-11"
                           required
                         />
                       </div>
@@ -611,7 +611,7 @@ export default function VolunteerRegistrationPage() {
                       <span className="text-[10px] font-normal text-[#6b6463]">(Optional)</span>
                     </label>
                     <div className="relative">
-                      <div className="absolute top-3 left-0 pl-3 flex items-start pointer-events-none text-[#6b6463]">
+                      <div className="absolute top-3 left-0 pl-3.5 flex items-start pointer-events-none text-[#6b6463]">
                         <MessageSquare className="w-4 h-4" />
                       </div>
                       <textarea
@@ -620,7 +620,7 @@ export default function VolunteerRegistrationPage() {
                         placeholder="Any message or additional information for the team..."
                         rows={3}
                         maxLength={1000}
-                        className="ios-input pl-10 resize-none"
+                        className="ios-input ios-input-icon !pl-11 !pt-2.5 resize-none text-xs"
                       />
                     </div>
                     {comment.length > 0 && (
