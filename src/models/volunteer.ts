@@ -7,6 +7,7 @@ export interface IVolunteer extends Document {
   pollingStation: string;
   isOtherStation: boolean;
   occupation?: string;
+  educationLevel?: string;
   comment?: string;
   status: "verified" | "active" | "flagged";
   notes?: string;
@@ -49,6 +50,12 @@ const VolunteerSchema = new Schema<IVolunteer>(
       type: String,
       trim: true,
       maxlength: 120,
+      default: "",
+    },
+    educationLevel: {
+      type: String,
+      trim: true,
+      maxlength: 100,
       default: "",
     },
     comment: {

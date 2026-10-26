@@ -121,7 +121,9 @@ export default function AdminDashboardPage() {
         const matchesName = item.fullName.toLowerCase().includes(q);
         const matchesPhone = item.phoneNumber.toLowerCase().includes(q);
         const matchesStation = item.pollingStation.toLowerCase().includes(q);
-        if (!matchesName && !matchesPhone && !matchesStation) return false;
+        const matchesOccupation = (item.occupation || "").toLowerCase().includes(q);
+        const matchesEducation = (item.educationLevel || "").toLowerCase().includes(q);
+        if (!matchesName && !matchesPhone && !matchesStation && !matchesOccupation && !matchesEducation) return false;
       }
       return true;
     });
@@ -473,6 +475,12 @@ export default function AdminDashboardPage() {
                     </p>
                   )}
 
+                  {vol.educationLevel && (
+                    <p className="text-[11px] text-[#6b7280] flex items-center gap-1">
+                      <span className="font-semibold text-[#191414]">Education:</span> {vol.educationLevel}
+                    </p>
+                  )}
+
                   <div className="pt-2 border-t border-[#e6dfdc] flex items-center justify-between text-xs">
                     <div className="flex items-center gap-2">
                       <a
@@ -512,6 +520,7 @@ export default function AdminDashboardPage() {
                     <th className="px-4 py-3">Volunteer</th>
                     <th className="px-4 py-3">Phone</th>
                     <th className="px-4 py-3">Kazi</th>
+                    <th className="px-4 py-3">Education</th>
                     <th className="px-4 py-3">Ward</th>
                     <th className="px-4 py-3">Polling Station</th>
                     <th className="px-4 py-3">Status</th>
@@ -543,6 +552,7 @@ export default function AdminDashboardPage() {
                         </a>
                       </td>
                       <td className="px-4 py-3 text-[#6b7280]">{vol.occupation || <span className="text-[#d8cfcb]">—</span>}</td>
+                      <td className="px-4 py-3 text-[#6b7280]">{vol.educationLevel || <span className="text-[#d8cfcb]">—</span>}</td>
                       <td className="px-4 py-3 text-[#111827] font-medium">{vol.ward}</td>
                       <td className="px-4 py-3 text-[#6b7280]">
                         {vol.pollingStation}

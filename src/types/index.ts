@@ -19,6 +19,7 @@ export interface Volunteer {
   pollingStation: string;
   isOtherStation?: boolean;
   occupation?: string;
+  educationLevel?: string;
   comment?: string;
   status: "verified" | "active" | "flagged";
   notes?: string;
@@ -33,6 +34,7 @@ export interface VolunteerInput {
   pollingStation: string;
   isOtherStation?: boolean;
   occupation?: string;
+  educationLevel?: string;
   comment?: string;
   notes?: string;
 }

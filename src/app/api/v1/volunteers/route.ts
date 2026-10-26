@@ -22,6 +22,7 @@ const volunteerSchema = z.object({
     .min(2, "Please select your polling station"),
   isOtherStation: z.boolean().optional().default(false),
   occupation: z.string().max(120).optional(),
+  educationLevel: z.string().max(100).optional(),
   comment: z.string().max(1000).optional(),
   notes: z.string().max(500).optional(),
 });

@@ -14,6 +14,7 @@ import {
   Briefcase,
   MessageSquare,
   HelpCircle,
+  GraduationCap,
 } from "lucide-react";
 import { matunguWards, totalPollingStations } from "@/constants/matungu-wards";
 import { ApiResponse, Volunteer } from "@/types";
@@ -28,6 +29,7 @@ export default function VolunteerRegistrationPage() {
   const [isOtherStation, setIsOtherStation] = useState(false);
   const [otherStationText, setOtherStationText] = useState("");
   const [occupation, setOccupation] = useState("");
+  const [educationLevel, setEducationLevel] = useState("");
   const [comment, setComment] = useState("");
 
   const [loading, setLoading] = useState(false);
@@ -107,6 +109,7 @@ export default function VolunteerRegistrationPage() {
           pollingStation: finalStation,
           isOtherStation,
           occupation: occupation.trim(),
+          educationLevel: educationLevel.trim(),
           comment: comment.trim(),
         }),
       });
@@ -133,6 +136,7 @@ export default function VolunteerRegistrationPage() {
     setIsOtherStation(false);
     setOtherStationText("");
     setOccupation("");
+    setEducationLevel("");
     setComment("");
     setError(null);
     setSuccessVolunteer(null);
@@ -219,6 +223,15 @@ export default function VolunteerRegistrationPage() {
                   </div>
                 </>
               )}
+              {successVolunteer.educationLevel && (
+                <>
+                  <div className="h-px bg-[#e6dfdc]" />
+                  <div className="flex justify-between items-center text-xs">
+                    <span className="text-[#6b6463]">Education</span>
+                    <span className="font-semibold text-[#191414]">{successVolunteer.educationLevel}</span>
+                  </div>
+                </>
+              )}
               <div className="h-px bg-[#e6dfdc]" />
               <div className="flex justify-between items-center text-xs">
                 <span className="text-[#6b6463]">Status</span>
@@ -261,12 +274,12 @@ export default function VolunteerRegistrationPage() {
                   />
 
                   {/* Subtle contrast gradient */}
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/15 to-black/35 pointer-events-none" />
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/45 via-transparent to-black/25 pointer-events-none" />
 
                   {/* Top Floating Badges */}
                   <div className="absolute top-3 inset-x-3 flex items-center justify-between">
                     {/* Movement Badge */}
-                    <div className="flex items-center gap-1.5 bg-black/60 backdrop-blur-md px-2.5 py-1 rounded-sm border border-white/20 text-white shadow-sm">
+                    <div className="flex items-center gap-1.5 bg-black/45 backdrop-blur-md px-2.5 py-1 rounded-sm border border-white/20 text-white shadow-sm">
                       <div className="w-4 h-4 overflow-hidden rounded-xs shrink-0">
                         <img
                           src="/images/lmm-logo.jpg"
@@ -285,15 +298,15 @@ export default function VolunteerRegistrationPage() {
                     </div>
                   </div>
 
-                  {/* Bottom Floating Info */}
-                  <div className="absolute bottom-3 inset-x-3 bg-black/70 backdrop-blur-md p-3 rounded-sm border border-white/20 text-white shadow-sm">
-                    <span className="text-[10px] font-semibold uppercase tracking-wider text-[#d8b4b0]">
+                  {/* Bottom Floating Info - Light translucent frosted glass */}
+                  <div className="absolute bottom-3 inset-x-3 bg-black/30 backdrop-blur-md p-3 rounded-sm border border-white/15 text-white shadow-md">
+                    <span className="text-[10px] font-semibold uppercase tracking-wider text-[#e6c1bd] drop-shadow-sm">
                       Matungu Constituency
                     </span>
-                    <h2 className="text-lg sm:text-xl font-bold tracking-tight text-white leading-tight mt-0.5">
+                    <h2 className="text-lg sm:text-xl font-bold tracking-tight text-white leading-tight mt-0.5 drop-shadow-sm">
                       Hon. Shemaiah S. Kong&apos;ani
                     </h2>
-                    <p className="text-[11px] text-white/80 mt-0.5">
+                    <p className="text-[11px] text-white/90 mt-0.5 drop-shadow-sm">
                       Official Volunteer Mobilization Portal
                     </p>
                   </div>
@@ -482,24 +495,57 @@ export default function VolunteerRegistrationPage() {
                     </p>
                   </div>
 
-                  {/* Occupation (Kazi) - Optional */}
-                  <div>
-                    <label className="block text-xs font-semibold text-[#191414] mb-1.5 flex items-center gap-1.5">
-                      <span>Kazi</span>
-                      <span className="text-[10px] font-normal text-[#6b6463] line-through decoration-[#8e524d]/50">Occupation</span>
-                      <span className="text-[10px] font-normal text-[#6b6463]">(Optional)</span>
-                    </label>
-                    <div className="relative">
-                      <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-[#6b6463]">
-                        <Briefcase className="w-4 h-4" />
+                  {/* Occupation (Kazi) & Education Level */}
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
+                    {/* Occupation (Kazi) - Optional */}
+                    <div>
+                      <label className="block text-xs font-semibold text-[#191414] mb-1.5 flex items-center gap-1.5">
+                        <span>Kazi</span>
+                        <span className="text-[10px] font-normal text-[#6b6463] line-through decoration-[#8e524d]/50">Occupation</span>
+                        <span className="text-[10px] font-normal text-[#6b6463]">(Optional)</span>
+                      </label>
+                      <div className="relative">
+                        <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-[#6b6463]">
+                          <Briefcase className="w-4 h-4" />
+                        </div>
+                        <input
+                          type="text"
+                          value={occupation}
+                          onChange={(e) => setOccupation(e.target.value)}
+                          placeholder="e.g. Teacher, Farmer, Business..."
+                          className="ios-input ios-input-icon !pl-11"
+                        />
                       </div>
-                      <input
-                        type="text"
-                        value={occupation}
-                        onChange={(e) => setOccupation(e.target.value)}
-                        placeholder="e.g. Teacher, Farmer, Business, Boda Boda..."
-                        className="ios-input ios-input-icon !pl-11"
-                      />
+                    </div>
+
+                    {/* Level of Education - Optional */}
+                    <div>
+                      <label className="block text-xs font-semibold text-[#191414] mb-1.5 flex items-center gap-1.5">
+                        <span>Level of Education</span>
+                        <span className="text-[10px] font-normal text-[#6b6463]">(Optional)</span>
+                      </label>
+                      <div className="relative">
+                        <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-[#6b6463]">
+                          <GraduationCap className="w-4 h-4" />
+                        </div>
+                        <select
+                          value={educationLevel}
+                          onChange={(e) => setEducationLevel(e.target.value)}
+                          className="ios-input ios-input-icon ios-select-icon !pl-11 !pr-9 appearance-none bg-white cursor-pointer"
+                        >
+                          <option value="">-- Choose Level --</option>
+                          <option value="Primary School">Primary School (KCPE)</option>
+                          <option value="Secondary School">Secondary School (KCSE)</option>
+                          <option value="Certificate / TVET">Certificate / TVET</option>
+                          <option value="Diploma">Diploma</option>
+                          <option value="Undergraduate Degree">Undergraduate Degree (Bachelors)</option>
+                          <option value="Postgraduate">Postgraduate (Masters / PhD)</option>
+                          <option value="Other">Other</option>
+                        </select>
+                        <div className="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none text-[#6b6463]">
+                          <ChevronDown className="w-4 h-4" />
+                        </div>
+                      </div>
                     </div>
                   </div>
 
