@@ -14,12 +14,15 @@ const volunteerSchema = z.object({
     .min(9, "Valid phone number is required")
     .max(20, "Phone number is too long")
     .regex(/^[+0-9\s-]{9,20}$/, "Invalid phone format"),
-  ward: z.enum(["Koyonzo", "Mayoni", "Namamali"], {
+  ward: z.enum(["Koyonzo", "Mayoni", "Namamali", "Kholera", "Khalaba"], {
     errorMap: () => ({ message: "Please select a valid Matungu ward" }),
   }),
   pollingStation: z
     .string()
     .min(2, "Please select your polling station"),
+  isOtherStation: z.boolean().optional().default(false),
+  occupation: z.string().max(120).optional(),
+  comment: z.string().max(1000).optional(),
   notes: z.string().max(500).optional(),
 });
 
@@ -33,13 +36,15 @@ export async function POST(req: NextRequest) {
       return createApiError(firstError, 422, validated.error.format());
     }
 
-    // Verify polling station belongs to the selected ward
-    const wardData = matunguWards.find((w) => w.ward === validated.data.ward);
-    if (!wardData || !wardData.pollingStations.includes(validated.data.pollingStation)) {
-      return createApiError(
-        `Selected station '${validated.data.pollingStation}' is not in ${validated.data.ward} ward.`,
-        422
-      );
+    // Verify polling station belongs to the selected ward — unless "Other" was selected
+    if (!validated.data.isOtherStation) {
+      const wardData = matunguWards.find((w) => w.ward === validated.data.ward);
+      if (!wardData || !wardData.pollingStations.includes(validated.data.pollingStation)) {
+        return createApiError(
+          `Selected station '${validated.data.pollingStation}' is not in ${validated.data.ward} ward.`,
+          422
+        );
+      }
     }
 
     const volunteer = await createVolunteer(validated.data);

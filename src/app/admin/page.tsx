@@ -293,10 +293,10 @@ export default function AdminDashboardPage() {
       {/* Main Content Area */}
       <main className="max-w-4xl mx-auto w-full px-4 pt-4 flex-1 space-y-4">
         {/* KPI Strip */}
-        <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
-          <div className="ios-card p-3.5">
+        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3">
+          <div className="ios-card p-3.5 sm:col-span-1 lg:col-span-1">
             <p className="text-[11px] font-medium text-[#6b7280] uppercase tracking-wider">
-              Total Volunteers
+              Total
             </p>
             <p className="text-2xl font-bold text-[#111827] mt-0.5">
               {volunteers.length}
@@ -307,41 +307,19 @@ export default function AdminDashboardPage() {
             </p>
           </div>
 
-          <div className="ios-card p-3.5">
-            <p className="text-[11px] font-medium text-[#6b7280] uppercase tracking-wider">
-              Koyonzo Ward
-            </p>
-            <p className="text-xl font-bold text-[#111827] mt-0.5">
-              {volunteers.filter((v) => v.ward === "Koyonzo").length}
-            </p>
-            <p className="text-[10px] text-[#6b7280] mt-1">
-              19,476 Reg Voters
-            </p>
-          </div>
-
-          <div className="ios-card p-3.5">
-            <p className="text-[11px] font-medium text-[#6b7280] uppercase tracking-wider">
-              Mayoni Ward
-            </p>
-            <p className="text-xl font-bold text-[#111827] mt-0.5">
-              {volunteers.filter((v) => v.ward === "Mayoni").length}
-            </p>
-            <p className="text-[10px] text-[#6b7280] mt-1">
-              15,352 Reg Voters
-            </p>
-          </div>
-
-          <div className="ios-card p-3.5">
-            <p className="text-[11px] font-medium text-[#6b7280] uppercase tracking-wider">
-              Namamali Ward
-            </p>
-            <p className="text-xl font-bold text-[#111827] mt-0.5">
-              {volunteers.filter((v) => v.ward === "Namamali").length}
-            </p>
-            <p className="text-[10px] text-[#6b7280] mt-1">
-              15,175 Reg Voters
-            </p>
-          </div>
+          {matunguWards.map((w) => (
+            <div key={w.ward} className="ios-card p-3.5">
+              <p className="text-[11px] font-medium text-[#6b7280] uppercase tracking-wider truncate">
+                {w.ward}
+              </p>
+              <p className="text-xl font-bold text-[#111827] mt-0.5">
+                {volunteers.filter((v) => v.ward === w.ward).length}
+              </p>
+              <p className="text-[10px] text-[#6b7280] mt-1">
+                {w.pollingStations.length} stations
+              </p>
+            </div>
+          ))}
         </div>
 
         {/* Filter & Search Bar */}
@@ -378,7 +356,7 @@ export default function AdminDashboardPage() {
               }}
               className="ios-input sm:w-44 text-xs bg-white cursor-pointer"
             >
-              <option value="ALL">All Wards (3)</option>
+              <option value="ALL">All Wards ({matunguWards.length})</option>
               {matunguWards.map((w) => (
                 <option key={w.ward} value={w.ward}>
                   {w.ward}
@@ -459,6 +437,9 @@ export default function AdminDashboardPage() {
                       <p className="text-xs text-[#6b7280] flex items-center gap-1 mt-0.5">
                         <MapPin className="w-3 h-3 text-[#8e524d]" />
                         {vol.ward} &bull; {vol.pollingStation}
+                        {vol.isOtherStation && (
+                          <span className="text-[#8e524d] text-[10px]">(Other)</span>
+                        )}
                       </p>
                     </div>
 
@@ -477,6 +458,18 @@ export default function AdminDashboardPage() {
                   {vol.notes && (
                     <p className="text-xs bg-[#f9f8f7] p-2 rounded-lg text-[#111827] italic border border-[#e6dfdc]">
                       &quot;{vol.notes}&quot;
+                    </p>
+                  )}
+
+                  {vol.comment && (
+                    <p className="text-xs bg-[#8e524d]/5 p-2 rounded-sm text-[#191414] border border-[#8e524d]/15">
+                      💬 {vol.comment}
+                    </p>
+                  )}
+
+                  {vol.occupation && (
+                    <p className="text-[11px] text-[#6b7280] flex items-center gap-1">
+                      <span className="font-semibold text-[#191414]">Kazi:</span> {vol.occupation}
                     </p>
                   )}
 
@@ -518,6 +511,7 @@ export default function AdminDashboardPage() {
                   <tr>
                     <th className="px-4 py-3">Volunteer</th>
                     <th className="px-4 py-3">Phone</th>
+                    <th className="px-4 py-3">Kazi</th>
                     <th className="px-4 py-3">Ward</th>
                     <th className="px-4 py-3">Polling Station</th>
                     <th className="px-4 py-3">Status</th>
@@ -534,6 +528,11 @@ export default function AdminDashboardPage() {
                             {vol.notes}
                           </p>
                         )}
+                        {vol.comment && (
+                          <p className="text-[10px] text-[#8e524d] truncate max-w-xs">
+                            💬 {vol.comment}
+                          </p>
+                        )}
                       </td>
                       <td className="px-4 py-3 font-mono text-[#111827]">
                         <a
@@ -543,8 +542,14 @@ export default function AdminDashboardPage() {
                           {vol.phoneNumber}
                         </a>
                       </td>
+                      <td className="px-4 py-3 text-[#6b7280]">{vol.occupation || <span className="text-[#d8cfcb]">—</span>}</td>
                       <td className="px-4 py-3 text-[#111827] font-medium">{vol.ward}</td>
-                      <td className="px-4 py-3 text-[#6b7280]">{vol.pollingStation}</td>
+                      <td className="px-4 py-3 text-[#6b7280]">
+                        {vol.pollingStation}
+                        {vol.isOtherStation && (
+                          <span className="ml-1 text-[10px] text-[#8e524d] font-semibold">(Other)</span>
+                        )}
+                      </td>
                       <td className="px-4 py-3">
                         <button
                           onClick={() => handleToggleStatus(vol)}

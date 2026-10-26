@@ -5,6 +5,9 @@ export interface IVolunteer extends Document {
   phoneNumber: string;
   ward: string;
   pollingStation: string;
+  isOtherStation: boolean;
+  occupation?: string;
+  comment?: string;
   status: "verified" | "active" | "flagged";
   notes?: string;
   createdAt: Date;
@@ -29,7 +32,7 @@ const VolunteerSchema = new Schema<IVolunteer>(
     ward: {
       type: String,
       required: [true, "Ward is required"],
-      enum: ["Koyonzo", "Mayoni", "Namamali"],
+      enum: ["Koyonzo", "Mayoni", "Namamali", "Kholera", "Khalaba"],
       index: true,
     },
     pollingStation: {
@@ -37,6 +40,21 @@ const VolunteerSchema = new Schema<IVolunteer>(
       required: [true, "Polling station is required"],
       trim: true,
       index: true,
+    },
+    isOtherStation: {
+      type: Boolean,
+      default: false,
+    },
+    occupation: {
+      type: String,
+      trim: true,
+      maxlength: 120,
+      default: "",
+    },
+    comment: {
+      type: String,
+      maxlength: 1000,
+      default: "",
     },
     status: {
       type: String,
@@ -55,7 +73,8 @@ const VolunteerSchema = new Schema<IVolunteer>(
   }
 );
 
-// Compound index for unique volunteer per ward/station + phone prevention if needed
+// Indexes for unique volunteer phone prevention and fast query lookups
+VolunteerSchema.index({ phoneNumber: 1 }, { unique: true });
 VolunteerSchema.index({ phoneNumber: 1, ward: 1 });
 VolunteerSchema.index({ createdAt: -1 });
 

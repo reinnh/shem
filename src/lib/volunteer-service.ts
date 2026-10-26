@@ -13,6 +13,9 @@ let inMemoryVolunteers: Volunteer[] = [
     pollingStation: "Koyonzo Primary School",
     status: "verified",
     notes: "Youth mobilize lead",
+    occupation: "Teacher",
+    comment: "",
+    isOtherStation: false,
     createdAt: new Date(Date.now() - 3600000 * 24 * 2).toISOString(),
     updatedAt: new Date(Date.now() - 3600000 * 24 * 2).toISOString(),
   },
@@ -24,6 +27,9 @@ let inMemoryVolunteers: Volunteer[] = [
     pollingStation: "Matungu Primary School",
     status: "active",
     notes: "Women representative coordinator",
+    occupation: "Business",
+    comment: "",
+    isOtherStation: false,
     createdAt: new Date(Date.now() - 3600000 * 12).toISOString(),
     updatedAt: new Date(Date.now() - 3600000 * 12).toISOString(),
   },
@@ -35,6 +41,9 @@ let inMemoryVolunteers: Volunteer[] = [
     pollingStation: "Mirere Primary School",
     status: "verified",
     notes: "Station captain",
+    occupation: "Farmer",
+    comment: "",
+    isOtherStation: false,
     createdAt: new Date(Date.now() - 3600000 * 2).toISOString(),
     updatedAt: new Date(Date.now() - 3600000 * 2).toISOString(),
   },
@@ -47,6 +56,9 @@ function docToVolunteer(doc: IVolunteer): Volunteer {
     phoneNumber: doc.phoneNumber,
     ward: doc.ward,
     pollingStation: doc.pollingStation,
+    isOtherStation: doc.isOtherStation || false,
+    occupation: doc.occupation || "",
+    comment: doc.comment || "",
     status: doc.status,
     notes: doc.notes,
     createdAt: doc.createdAt ? doc.createdAt.toISOString() : new Date().toISOString(),
@@ -54,42 +66,115 @@ function docToVolunteer(doc: IVolunteer): Volunteer {
   };
 }
 
+export function normalizePhoneNumber(raw: string): string {
+  // Strip all whitespace, dashes, parentheses
+  let cleaned = raw.trim().replace(/[\s\-()]/g, "");
+  if (cleaned.startsWith("0")) {
+    cleaned = "+254" + cleaned.slice(1);
+  } else if (cleaned.startsWith("254") && !cleaned.startsWith("+")) {
+    cleaned = "+" + cleaned;
+  } else if (!cleaned.startsWith("+") && cleaned.length === 9) {
+    cleaned = "+254" + cleaned;
+  }
+  return cleaned;
+}
+
 export async function createVolunteer(input: VolunteerInput): Promise<Volunteer> {
+  const normalizedPhone = normalizePhoneNumber(input.phoneNumber);
+  const trimmedName = input.fullName.trim();
   const mongo = await connectMongo();
 
   if (mongo) {
-    // Check if phone already registered
-    const existing = await VolunteerModel.findOne({ phoneNumber: input.phoneNumber });
-    if (existing) {
-      throw new Error(`Volunteer with phone ${input.phoneNumber} is already registered under ${existing.ward} (${existing.pollingStation}).`);
-    }
-
-    const created = await VolunteerModel.create({
-      fullName: input.fullName.trim(),
-      phoneNumber: input.phoneNumber.trim(),
-      ward: input.ward,
-      pollingStation: input.pollingStation,
-      status: "active",
-      notes: input.notes || "",
+    // 1. Check if phone is already registered (checking canonical, raw, or local variations)
+    const rawDigits = input.phoneNumber.replace(/\D/g, "");
+    const existingByPhone = await VolunteerModel.findOne({
+      $or: [
+        { phoneNumber: normalizedPhone },
+        { phoneNumber: input.phoneNumber.trim() },
+        { phoneNumber: { $regex: new RegExp(rawDigits.slice(-9) + "$") } },
+      ],
     });
 
-    return docToVolunteer(created);
+    if (existingByPhone) {
+      throw new Error(
+        `A volunteer with phone number ${input.phoneNumber} (${existingByPhone.fullName}) is already registered under ${existingByPhone.ward} Ward (${existingByPhone.pollingStation}). Duplicate entries are not allowed.`
+      );
+    }
+
+    // 2. Check if identical name is already registered in the same Ward and Polling Station
+    const existingByNameAndStation = await VolunteerModel.findOne({
+      ward: input.ward,
+      pollingStation: input.pollingStation,
+      fullName: { $regex: new RegExp(`^${trimmedName.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")}$`, "i") },
+    });
+
+    if (existingByNameAndStation) {
+      throw new Error(
+        `Volunteer "${trimmedName}" is already registered at ${input.pollingStation} in ${input.ward} Ward. Duplicate submission rejected.`
+      );
+    }
+
+    try {
+      const created = await VolunteerModel.create({
+        fullName: trimmedName,
+        phoneNumber: normalizedPhone,
+        ward: input.ward,
+        pollingStation: input.pollingStation,
+        isOtherStation: input.isOtherStation || false,
+        occupation: input.occupation?.trim() || "",
+        comment: input.comment?.trim() || "",
+        status: "active",
+        notes: input.notes?.trim() || "",
+      });
+
+      return docToVolunteer(created);
+    } catch (dbErr: unknown) {
+      // Catch MongoDB unique constraint error E11000
+      const err = dbErr as { code?: number; message?: string };
+      if (err.code === 11000) {
+        throw new Error(`Phone number ${normalizedPhone} is already registered in the system. Duplicate entries are not allowed.`);
+      }
+      throw dbErr;
+    }
   }
 
-  // Fallback in-memory
-  const existingMem = inMemoryVolunteers.find((v) => v.phoneNumber === input.phoneNumber.trim());
-  if (existingMem) {
-    throw new Error(`Volunteer with phone ${input.phoneNumber} is already registered under ${existingMem.ward} (${existingMem.pollingStation}).`);
+  // Fallback in-memory duplicate validation
+  const existingMemPhone = inMemoryVolunteers.find(
+    (v) =>
+      normalizePhoneNumber(v.phoneNumber) === normalizedPhone ||
+      v.phoneNumber.replace(/\D/g, "").slice(-9) === input.phoneNumber.replace(/\D/g, "").slice(-9)
+  );
+
+  if (existingMemPhone) {
+    throw new Error(
+      `A volunteer with phone number ${input.phoneNumber} (${existingMemPhone.fullName}) is already registered under ${existingMemPhone.ward} Ward (${existingMemPhone.pollingStation}). Duplicate entries are not allowed.`
+    );
+  }
+
+  const existingMemNameStation = inMemoryVolunteers.find(
+    (v) =>
+      v.ward === input.ward &&
+      v.pollingStation === input.pollingStation &&
+      v.fullName.toLowerCase() === trimmedName.toLowerCase()
+  );
+
+  if (existingMemNameStation) {
+    throw new Error(
+      `Volunteer "${trimmedName}" is already registered at ${input.pollingStation} in ${input.ward} Ward. Duplicate submission rejected.`
+    );
   }
 
   const newVolunteer: Volunteer = {
     _id: `mem-${Date.now()}-${Math.random().toString(36).substring(2, 7)}`,
-    fullName: input.fullName.trim(),
-    phoneNumber: input.phoneNumber.trim(),
+    fullName: trimmedName,
+    phoneNumber: normalizedPhone,
     ward: input.ward,
     pollingStation: input.pollingStation,
+    isOtherStation: input.isOtherStation || false,
+    occupation: input.occupation?.trim() || "",
+    comment: input.comment?.trim() || "",
     status: "active",
-    notes: input.notes || "",
+    notes: input.notes?.trim() || "",
     createdAt: new Date().toISOString(),
     updatedAt: new Date().toISOString(),
   };

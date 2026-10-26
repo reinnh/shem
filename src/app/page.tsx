@@ -11,16 +11,24 @@ import {
   ChevronDown,
   ArrowRight,
   Shield,
+  Briefcase,
+  MessageSquare,
+  HelpCircle,
 } from "lucide-react";
-import { matunguWards, totalConstituencyVoters } from "@/constants/matungu-wards";
+import { matunguWards, totalPollingStations } from "@/constants/matungu-wards";
 import { ApiResponse, Volunteer } from "@/types";
+
+const OTHER_STATION = "__OTHER__";
 
 export default function VolunteerRegistrationPage() {
   const [fullName, setFullName] = useState("");
   const [phoneNumber, setPhoneNumber] = useState("");
   const [ward, setWard] = useState("");
   const [pollingStation, setPollingStation] = useState("");
-  const [notes, setNotes] = useState("");
+  const [isOtherStation, setIsOtherStation] = useState(false);
+  const [otherStationText, setOtherStationText] = useState("");
+  const [occupation, setOccupation] = useState("");
+  const [comment, setComment] = useState("");
 
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -35,6 +43,21 @@ export default function VolunteerRegistrationPage() {
     const newWard = e.target.value;
     setWard(newWard);
     setPollingStation(""); // Reset cascading dropdown
+    setIsOtherStation(false);
+    setOtherStationText("");
+    setError(null);
+  };
+
+  const handleStationChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    const val = e.target.value;
+    if (val === OTHER_STATION) {
+      setIsOtherStation(true);
+      setPollingStation(OTHER_STATION);
+    } else {
+      setIsOtherStation(false);
+      setOtherStationText("");
+      setPollingStation(val);
+    }
     setError(null);
   };
 
@@ -64,6 +87,13 @@ export default function VolunteerRegistrationPage() {
       return;
     }
 
+    if (isOtherStation && !otherStationText.trim()) {
+      setError("Please describe your polling station / location.");
+      return;
+    }
+
+    const finalStation = isOtherStation ? otherStationText.trim() : pollingStation;
+
     setLoading(true);
 
     try {
@@ -74,8 +104,10 @@ export default function VolunteerRegistrationPage() {
           fullName: fullName.trim(),
           phoneNumber: cleanPhone,
           ward,
-          pollingStation,
-          notes: notes.trim(),
+          pollingStation: finalStation,
+          isOtherStation,
+          occupation: occupation.trim(),
+          comment: comment.trim(),
         }),
       });
 
@@ -98,14 +130,17 @@ export default function VolunteerRegistrationPage() {
     setPhoneNumber("");
     setWard("");
     setPollingStation("");
-    setNotes("");
+    setIsOtherStation(false);
+    setOtherStationText("");
+    setOccupation("");
+    setComment("");
     setError(null);
     setSuccessVolunteer(null);
   };
 
   return (
     <div className="min-h-screen bg-[#f9f8f7] text-[#191414] flex flex-col justify-between pb-12">
-      {/* Top Header - Mobile friendly, gracefully wide on LG */}
+      {/* Top Header */}
       <header className="sticky top-0 z-40 bg-white/95 backdrop-blur-md border-b border-[#e6dfdc] px-4 py-2.5">
         <div className="max-w-md lg:max-w-6xl mx-auto flex items-center justify-between">
           <div className="flex items-center space-x-2.5">
@@ -134,7 +169,7 @@ export default function VolunteerRegistrationPage() {
         </div>
       </header>
 
-      {/* Main Container - max-w-md on mobile, 2-column wide layout on lg */}
+      {/* Main Container */}
       <main className="max-w-md lg:max-w-6xl mx-auto w-full px-3.5 lg:px-6 pt-3 lg:pt-6 flex-1">
         {successVolunteer ? (
           /* Success Receipt Card */
@@ -165,6 +200,9 @@ export default function VolunteerRegistrationPage() {
                 <span className="text-[#6b6463]">Polling Station</span>
                 <span className="font-semibold text-[#191414] text-right max-w-[65%]">
                   {successVolunteer.pollingStation}
+                  {successVolunteer.isOtherStation && (
+                    <span className="text-[#8e524d] text-[10px] block">Not in list</span>
+                  )}
                 </span>
               </div>
               <div className="h-px bg-[#e6dfdc]" />
@@ -172,6 +210,15 @@ export default function VolunteerRegistrationPage() {
                 <span className="text-[#6b6463]">Phone</span>
                 <span className="font-semibold text-[#191414]">{successVolunteer.phoneNumber}</span>
               </div>
+              {successVolunteer.occupation && (
+                <>
+                  <div className="h-px bg-[#e6dfdc]" />
+                  <div className="flex justify-between items-center text-xs">
+                    <span className="text-[#6b6463]">Occupation</span>
+                    <span className="font-semibold text-[#191414]">{successVolunteer.occupation}</span>
+                  </div>
+                </>
+              )}
               <div className="h-px bg-[#e6dfdc]" />
               <div className="flex justify-between items-center text-xs">
                 <span className="text-[#6b6463]">Status</span>
@@ -203,7 +250,7 @@ export default function VolunteerRegistrationPage() {
           <div className="space-y-3 lg:space-y-0 lg:grid lg:grid-cols-12 lg:gap-6 lg:items-start">
             {/* Left Column (Hero & Geographic Accordion on LG) */}
             <div className="lg:col-span-5 space-y-3">
-              {/* Hero Banner: Almost half visible height on mobile, generous height on desktop */}
+              {/* Hero Banner */}
               <div className="ios-card overflow-hidden bg-white border border-[#e6dfdc]">
                 {/* Image Container */}
                 <div className="relative w-full h-[47vh] min-h-[350px] max-h-[520px] lg:h-[440px] bg-[#2a1e1d] overflow-hidden">
@@ -213,10 +260,10 @@ export default function VolunteerRegistrationPage() {
                     className="w-full h-full object-cover object-top"
                   />
 
-                  {/* Subtle contrast gradient at top and bottom */}
+                  {/* Subtle contrast gradient */}
                   <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/15 to-black/35 pointer-events-none" />
 
-                  {/* Top Floating Info Badges - Clean Non-AI Borders */}
+                  {/* Top Floating Badges */}
                   <div className="absolute top-3 inset-x-3 flex items-center justify-between">
                     {/* Movement Badge */}
                     <div className="flex items-center gap-1.5 bg-black/60 backdrop-blur-md px-2.5 py-1 rounded-sm border border-white/20 text-white shadow-sm">
@@ -238,7 +285,7 @@ export default function VolunteerRegistrationPage() {
                     </div>
                   </div>
 
-                  {/* Bottom Floating Info Card - Clean Minimal Non-AI Overlay */}
+                  {/* Bottom Floating Info */}
                   <div className="absolute bottom-3 inset-x-3 bg-black/70 backdrop-blur-md p-3 rounded-sm border border-white/20 text-white shadow-sm">
                     <span className="text-[10px] font-semibold uppercase tracking-wider text-[#d8b4b0]">
                       Matungu Constituency
@@ -252,26 +299,20 @@ export default function VolunteerRegistrationPage() {
                   </div>
                 </div>
 
-                {/* Clean Constituency Stats Strip */}
-                <div className="grid grid-cols-3 gap-2 p-2.5 bg-white text-center border-t border-[#e6dfdc]">
+                {/* Constituency Stats Strip */}
+                <div className="grid grid-cols-2 gap-2 p-2.5 bg-white text-center border-t border-[#e6dfdc]">
                   <div className="bg-[#f4efed] py-1.5 px-1 rounded-sm border border-[#e6dfdc]">
                     <p className="text-[10px] text-[#6b6463] uppercase font-semibold">Wards</p>
-                    <p className="text-xs font-bold text-[#191414]">3 Wards</p>
+                    <p className="text-xs font-bold text-[#191414]">{matunguWards.length} Wards</p>
                   </div>
                   <div className="bg-[#f4efed] py-1.5 px-1 rounded-sm border border-[#e6dfdc]">
                     <p className="text-[10px] text-[#6b6463] uppercase font-semibold">Centers</p>
-                    <p className="text-xs font-bold text-[#191414]">12 Stations</p>
-                  </div>
-                  <div className="bg-[#f4efed] py-1.5 px-1 rounded-sm border border-[#e6dfdc]">
-                    <p className="text-[10px] text-[#6b6463] uppercase font-semibold">Voters</p>
-                    <p className="text-xs font-bold text-[#8e524d]">
-                      {totalConstituencyVoters.toLocaleString()}
-                    </p>
+                    <p className="text-xs font-bold text-[#191414]">{totalPollingStations} Stations</p>
                   </div>
                 </div>
               </div>
 
-              {/* Geographical Mappings - Smooth Accordion (On desktop placed under Hero) */}
+              {/* Geographical Mappings - Smooth Accordion */}
               <div className="ios-card overflow-hidden">
                 <button
                   type="button"
@@ -289,7 +330,7 @@ export default function VolunteerRegistrationPage() {
                       <p className="text-[10px] text-[#6b6463]">
                         {showWardsAccordion
                           ? "Tap to collapse mappings"
-                          : "3 Wards &bull; 12 Centers (Tap to explore)"}
+                          : `${matunguWards.length} Wards • ${totalPollingStations} Centers (Tap to explore)`}
                       </p>
                     </div>
                   </div>
@@ -332,12 +373,6 @@ export default function VolunteerRegistrationPage() {
                                   {w.pollingStations.length} Designated Centers
                                 </p>
                               </div>
-                              <div className="text-right">
-                                <p className="text-xs font-bold text-[#8e524d]">
-                                  {w.registeredVoters.toLocaleString()}
-                                </p>
-                                <p className="text-[10px] text-[#6b6463]">Voters</p>
-                              </div>
                             </div>
 
                             {/* Station Buttons */}
@@ -349,6 +384,8 @@ export default function VolunteerRegistrationPage() {
                                   onClick={() => {
                                     setWard(w.ward);
                                     setPollingStation(station);
+                                    setIsOtherStation(false);
+                                    setOtherStationText("");
                                     window.scrollTo({ top: 120, behavior: "smooth" });
                                   }}
                                   className={`text-[10px] px-2 py-0.5 rounded-sm border transition-all cursor-pointer ${
@@ -417,7 +454,7 @@ export default function VolunteerRegistrationPage() {
                         value={fullName}
                         onChange={(e) => setFullName(e.target.value)}
                         placeholder="e.g. Wycliffe Omwitsa"
-                        className="ios-input pl-9"
+                        className="ios-input pl-10"
                       />
                     </div>
                   </div>
@@ -437,12 +474,33 @@ export default function VolunteerRegistrationPage() {
                         value={phoneNumber}
                         onChange={(e) => setPhoneNumber(e.target.value)}
                         placeholder="0712 345 678 or +254 7..."
-                        className="ios-input pl-9"
+                        className="ios-input pl-10"
                       />
                     </div>
                     <p className="text-[10px] text-[#6b6463] mt-1 pl-0.5">
                       Used for SMS station alerts and direct WhatsApp coordination.
                     </p>
+                  </div>
+
+                  {/* Occupation (Kazi) - Optional */}
+                  <div>
+                    <label className="block text-xs font-semibold text-[#191414] mb-1.5 flex items-center gap-1.5">
+                      <span>Kazi</span>
+                      <span className="text-[10px] font-normal text-[#6b6463] line-through decoration-[#8e524d]/50">Occupation</span>
+                      <span className="text-[10px] font-normal text-[#6b6463]">(Optional)</span>
+                    </label>
+                    <div className="relative">
+                      <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-[#6b6463]">
+                        <Briefcase className="w-4 h-4" />
+                      </div>
+                      <input
+                        type="text"
+                        value={occupation}
+                        onChange={(e) => setOccupation(e.target.value)}
+                        placeholder="e.g. Teacher, Farmer, Business, Boda Boda..."
+                        className="ios-input pl-10"
+                      />
+                    </div>
                   </div>
 
                   {/* 2 Cascading Dropdowns: Ward & Polling Station */}
@@ -460,12 +518,12 @@ export default function VolunteerRegistrationPage() {
                           required
                           value={ward}
                           onChange={handleWardChange}
-                          className="ios-input pl-9 pr-9 appearance-none bg-white cursor-pointer"
+                          className="ios-input pl-10 pr-9 appearance-none bg-white cursor-pointer"
                         >
                           <option value="">-- Choose Ward --</option>
                           {matunguWards.map((w) => (
                             <option key={w.ward} value={w.ward}>
-                              {w.ward} Ward ({w.registeredVoters.toLocaleString()} voters)
+                              {w.ward} Ward
                             </option>
                           ))}
                         </select>
@@ -495,8 +553,8 @@ export default function VolunteerRegistrationPage() {
                           required
                           disabled={!ward}
                           value={pollingStation}
-                          onChange={(e) => setPollingStation(e.target.value)}
-                          className="ios-input pl-9 pr-9 appearance-none bg-white cursor-pointer disabled:bg-[#f4efed] disabled:text-[#6b6463] disabled:cursor-not-allowed"
+                          onChange={handleStationChange}
+                          className="ios-input pl-10 pr-9 appearance-none bg-white cursor-pointer disabled:bg-[#f4efed] disabled:text-[#6b6463] disabled:cursor-not-allowed"
                         >
                           <option value="">
                             {ward
@@ -508,6 +566,11 @@ export default function VolunteerRegistrationPage() {
                               {station}
                             </option>
                           ))}
+                          {ward && (
+                            <option value={OTHER_STATION}>
+                              ⚠ My station is not listed above
+                            </option>
+                          )}
                         </select>
                         <div className="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none text-[#6b6463]">
                           <ChevronDown className="w-4 h-4" />
@@ -516,18 +579,55 @@ export default function VolunteerRegistrationPage() {
                     </div>
                   </div>
 
-                  {/* Focus / Notes (Optional) */}
+                  {/* "Other" Station Text Input — shown when user selects "not listed" */}
+                  {isOtherStation && (
+                    <div className="bg-[#f4efed] border border-[#e6dfdc] rounded-sm p-3 space-y-2">
+                      <div className="flex items-start gap-2">
+                        <HelpCircle className="w-4 h-4 text-[#8e524d] shrink-0 mt-0.5" />
+                        <p className="text-[11px] text-[#6b6463]">
+                          No problem — please type the name of your polling station or the nearest landmark below. Our team will verify and update your details.
+                        </p>
+                      </div>
+                      <div className="relative">
+                        <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-[#6b6463]">
+                          <MapPin className="w-4 h-4" />
+                        </div>
+                        <input
+                          type="text"
+                          value={otherStationText}
+                          onChange={(e) => setOtherStationText(e.target.value)}
+                          placeholder="e.g. Lugari Primary, near Matungu Market..."
+                          className="ios-input pl-10"
+                          required
+                        />
+                      </div>
+                    </div>
+                  )}
+
+                  {/* Comment / Message - Optional */}
                   <div>
-                    <label className="block text-xs font-semibold text-[#191414] mb-1.5">
-                      Volunteer Focus / Role (Optional)
+                    <label className="block text-xs font-semibold text-[#191414] mb-1.5 flex items-center gap-1.5">
+                      <span>Message / Comment</span>
+                      <span className="text-[10px] font-normal text-[#6b6463]">(Optional)</span>
                     </label>
-                    <input
-                      type="text"
-                      value={notes}
-                      onChange={(e) => setNotes(e.target.value)}
-                      placeholder="e.g. Polling day agent, Youth mobilization, Logistics"
-                      className="ios-input"
-                    />
+                    <div className="relative">
+                      <div className="absolute top-3 left-0 pl-3 flex items-start pointer-events-none text-[#6b6463]">
+                        <MessageSquare className="w-4 h-4" />
+                      </div>
+                      <textarea
+                        value={comment}
+                        onChange={(e) => setComment(e.target.value)}
+                        placeholder="Any message or additional information for the team..."
+                        rows={3}
+                        maxLength={1000}
+                        className="ios-input pl-10 resize-none"
+                      />
+                    </div>
+                    {comment.length > 0 && (
+                      <p className="text-[10px] text-[#6b6463] mt-1 text-right">
+                        {comment.length}/1000
+                      </p>
+                    )}
                   </div>
                 </div>
 

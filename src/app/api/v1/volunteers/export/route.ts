@@ -9,15 +9,18 @@ export async function GET(req: NextRequest) {
 
     const list = await getVolunteers({ ward, pollingStation });
 
-    // Build CSV
+    // Build CSV with all fields including new ones
     const headers = [
       "ID",
       "Full Name",
       "Phone Number",
       "Ward",
       "Polling Station",
+      "Station (Other?)",
+      "Occupation (Kazi)",
       "Status",
       "Registration Date",
+      "Comment",
       "Notes",
     ];
 
@@ -27,8 +30,11 @@ export async function GET(req: NextRequest) {
       `"${v.phoneNumber}"`,
       `"${v.ward}"`,
       `"${v.pollingStation.replace(/"/g, '""')}"`,
+      `"${v.isOtherStation ? "Yes" : "No"}"`,
+      `"${(v.occupation || "").replace(/"/g, '""')}"`,
       `"${v.status}"`,
       `"${new Date(v.createdAt).toLocaleDateString()}"`,
+      `"${(v.comment || "").replace(/"/g, '""').replace(/\n/g, " ")}"`,
       `"${(v.notes || "").replace(/"/g, '""')}"`,
     ]);
 

@@ -17,6 +17,9 @@ export interface Volunteer {
   phoneNumber: string;
   ward: string;
   pollingStation: string;
+  isOtherStation?: boolean;
+  occupation?: string;
+  comment?: string;
   status: "verified" | "active" | "flagged";
   notes?: string;
   createdAt: string;
@@ -28,6 +31,9 @@ export interface VolunteerInput {
   phoneNumber: string;
   ward: string;
   pollingStation: string;
+  isOtherStation?: boolean;
+  occupation?: string;
+  comment?: string;
   notes?: string;
 }
 
