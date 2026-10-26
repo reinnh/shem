@@ -54,13 +54,13 @@ export default function AdminDashboardPage() {
 
   const handleUnlock = (e: React.FormEvent) => {
     e.preventDefault();
-    const clean = passcode.trim().toLowerCase();
-    if (clean === "2027" || clean === "2028" || clean === "2027/2028" || clean === "shem") {
+    const clean = passcode.trim();
+    if (clean === "@shem36" || clean.toLowerCase() === "@shem36") {
       setIsAuthenticated(true);
       localStorage.setItem("matungu_admin_auth", "true");
       setAuthError("");
     } else {
-      setAuthError("Incorrect coordinator passcode. (Default: 2027 or 2028)");
+      setAuthError("Incorrect coordinator passcode.");
     }
   };
 
@@ -200,7 +200,7 @@ export default function AdminDashboardPage() {
                 type="password"
                 value={passcode}
                 onChange={(e) => setPasscode(e.target.value)}
-                placeholder="Enter Passcode (2027 / 2028)"
+                placeholder="Enter Passcode"
                 className="ios-input text-center text-lg tracking-widest"
                 autoFocus
               />
@@ -217,7 +217,7 @@ export default function AdminDashboardPage() {
               <ArrowLeft className="w-3.5 h-3.5" />
               Volunteer Form
             </Link>
-            <span className="text-[#6b7280]">Default: 2027 / 2028</span>
+            <span className="text-[#6b7280]">Coordinator Access</span>
           </div>
         </div>
       </div>

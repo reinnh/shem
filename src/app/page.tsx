@@ -105,9 +105,9 @@ export default function VolunteerRegistrationPage() {
 
   return (
     <div className="min-h-screen bg-[#f9f8f7] text-[#191414] flex flex-col justify-between pb-12">
-      {/* Top Header */}
+      {/* Top Header - Mobile friendly, gracefully wide on LG */}
       <header className="sticky top-0 z-40 bg-white/95 backdrop-blur-md border-b border-[#e6dfdc] px-4 py-2.5">
-        <div className="max-w-md mx-auto flex items-center justify-between">
+        <div className="max-w-md lg:max-w-6xl mx-auto flex items-center justify-between">
           <div className="flex items-center space-x-2.5">
             <div className="w-7 h-7 overflow-hidden border border-[#e6dfdc] shrink-0 bg-white rounded-sm">
               <img
@@ -126,17 +126,19 @@ export default function VolunteerRegistrationPage() {
             </div>
           </div>
 
-          <span className="text-[10px] font-bold text-[#8e524d] bg-[#8e524d]/10 px-2.5 py-0.5 rounded-sm border border-[#8e524d]/25 uppercase tracking-wide">
-            2027 &bull; 2028
-          </span>
+          <div className="flex items-center gap-2">
+            <span className="text-[10px] font-bold text-[#8e524d] bg-[#8e524d]/10 px-2.5 py-0.5 rounded-sm border border-[#8e524d]/25 uppercase tracking-wide">
+              2027 &bull; 2028
+            </span>
+          </div>
         </div>
       </header>
 
-      {/* Main Container */}
-      <main className="max-w-md mx-auto w-full px-3.5 pt-3 flex-1">
+      {/* Main Container - max-w-md on mobile, 2-column wide layout on lg */}
+      <main className="max-w-md lg:max-w-6xl mx-auto w-full px-3.5 lg:px-6 pt-3 lg:pt-6 flex-1">
         {successVolunteer ? (
           /* Success Receipt Card */
-          <div className="ios-card p-6 mt-3 text-center">
+          <div className="ios-card max-w-md lg:max-w-lg mx-auto p-6 mt-3 lg:mt-8 text-center">
             <div className="w-14 h-14 rounded-full bg-[#8e524d]/10 text-[#8e524d] flex items-center justify-center mx-auto mb-3">
               <CheckCircle2 className="w-8 h-8" />
             </div>
@@ -197,352 +199,370 @@ export default function VolunteerRegistrationPage() {
             </div>
           </div>
         ) : (
-          /* Normal Registration Form */
-          <div className="space-y-3">
-            {/* Hero Banner: Almost half visible height with floating info in clean non-AI borders */}
-            <div className="ios-card overflow-hidden bg-white border border-[#e6dfdc]">
-              {/* Image Container */}
-              <div className="relative w-full h-[47vh] min-h-[350px] max-h-[520px] bg-[#2a1e1d] overflow-hidden">
-                <img
-                  src="/images/candidate.jpg"
-                  alt="Hon. Shemaiah S. Kong'ani"
-                  className="w-full h-full object-cover object-top"
-                />
+          /* Normal Registration: Stacked on mobile, 2-column side-by-side on LG screens */
+          <div className="space-y-3 lg:space-y-0 lg:grid lg:grid-cols-12 lg:gap-6 lg:items-start">
+            {/* Left Column (Hero & Geographic Accordion on LG) */}
+            <div className="lg:col-span-5 space-y-3">
+              {/* Hero Banner: Almost half visible height on mobile, generous height on desktop */}
+              <div className="ios-card overflow-hidden bg-white border border-[#e6dfdc]">
+                {/* Image Container */}
+                <div className="relative w-full h-[47vh] min-h-[350px] max-h-[520px] lg:h-[440px] bg-[#2a1e1d] overflow-hidden">
+                  <img
+                    src="/images/candidate.jpg"
+                    alt="Hon. Shemaiah S. Kong'ani"
+                    className="w-full h-full object-cover object-top"
+                  />
 
-                {/* Subtle contrast gradient at top and bottom */}
-                <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/15 to-black/35 pointer-events-none" />
+                  {/* Subtle contrast gradient at top and bottom */}
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/15 to-black/35 pointer-events-none" />
 
-                {/* Top Floating Info Badges - Clean Non-AI Borders */}
-                <div className="absolute top-3 inset-x-3 flex items-center justify-between">
-                  {/* Movement Badge */}
-                  <div className="flex items-center gap-1.5 bg-black/60 backdrop-blur-md px-2.5 py-1 rounded-sm border border-white/20 text-white shadow-sm">
-                    <div className="w-4 h-4 overflow-hidden rounded-xs shrink-0">
-                      <img
-                        src="/images/lmm-logo.jpg"
-                        alt="LMM"
-                        className="w-full h-full object-cover"
-                      />
+                  {/* Top Floating Info Badges - Clean Non-AI Borders */}
+                  <div className="absolute top-3 inset-x-3 flex items-center justify-between">
+                    {/* Movement Badge */}
+                    <div className="flex items-center gap-1.5 bg-black/60 backdrop-blur-md px-2.5 py-1 rounded-sm border border-white/20 text-white shadow-sm">
+                      <div className="w-4 h-4 overflow-hidden rounded-xs shrink-0">
+                        <img
+                          src="/images/lmm-logo.jpg"
+                          alt="LMM"
+                          className="w-full h-full object-cover"
+                        />
+                      </div>
+                      <span className="text-[11px] font-semibold tracking-wide">
+                        Linda Mwananchi
+                      </span>
                     </div>
-                    <span className="text-[11px] font-semibold tracking-wide">
-                      Linda Mwananchi
-                    </span>
+
+                    {/* Year Tag */}
+                    <div className="bg-[#8e524d] text-white px-2.5 py-1 rounded-sm text-[10px] font-bold tracking-wider uppercase border border-white/20 shadow-sm">
+                      2027 &bull; 2028
+                    </div>
                   </div>
 
-                  {/* Year Tag */}
-                  <div className="bg-[#8e524d] text-white px-2.5 py-1 rounded-sm text-[10px] font-bold tracking-wider uppercase border border-white/20 shadow-sm">
-                    2027 &bull; 2028
+                  {/* Bottom Floating Info Card - Clean Minimal Non-AI Overlay */}
+                  <div className="absolute bottom-3 inset-x-3 bg-black/70 backdrop-blur-md p-3 rounded-sm border border-white/20 text-white shadow-sm">
+                    <span className="text-[10px] font-semibold uppercase tracking-wider text-[#d8b4b0]">
+                      Matungu Constituency
+                    </span>
+                    <h2 className="text-lg sm:text-xl font-bold tracking-tight text-white leading-tight mt-0.5">
+                      Hon. Shemaiah S. Kong&apos;ani
+                    </h2>
+                    <p className="text-[11px] text-white/80 mt-0.5">
+                      Official Volunteer Mobilization Portal
+                    </p>
                   </div>
                 </div>
 
-                {/* Bottom Floating Info Card - Clean Minimal Non-AI Overlay */}
-                <div className="absolute bottom-3 inset-x-3 bg-black/70 backdrop-blur-md p-3 rounded-sm border border-white/20 text-white shadow-sm">
-                  <span className="text-[10px] font-semibold uppercase tracking-wider text-[#d8b4b0]">
-                    Matungu Constituency
-                  </span>
-                  <h2 className="text-lg sm:text-xl font-bold tracking-tight text-white leading-tight mt-0.5">
-                    Hon. Shemaiah S. Kong&apos;ani
-                  </h2>
-                  <p className="text-[11px] text-white/80 mt-0.5">
-                    Official Volunteer Mobilization Portal
-                  </p>
+                {/* Clean Constituency Stats Strip */}
+                <div className="grid grid-cols-3 gap-2 p-2.5 bg-white text-center border-t border-[#e6dfdc]">
+                  <div className="bg-[#f4efed] py-1.5 px-1 rounded-sm border border-[#e6dfdc]">
+                    <p className="text-[10px] text-[#6b6463] uppercase font-semibold">Wards</p>
+                    <p className="text-xs font-bold text-[#191414]">3 Wards</p>
+                  </div>
+                  <div className="bg-[#f4efed] py-1.5 px-1 rounded-sm border border-[#e6dfdc]">
+                    <p className="text-[10px] text-[#6b6463] uppercase font-semibold">Centers</p>
+                    <p className="text-xs font-bold text-[#191414]">12 Stations</p>
+                  </div>
+                  <div className="bg-[#f4efed] py-1.5 px-1 rounded-sm border border-[#e6dfdc]">
+                    <p className="text-[10px] text-[#6b6463] uppercase font-semibold">Voters</p>
+                    <p className="text-xs font-bold text-[#8e524d]">
+                      {totalConstituencyVoters.toLocaleString()}
+                    </p>
+                  </div>
                 </div>
               </div>
 
-              {/* Clean Constituency Stats Strip */}
-              <div className="grid grid-cols-3 gap-2 p-2.5 bg-white text-center border-t border-[#e6dfdc]">
-                <div className="bg-[#f4efed] py-1.5 px-1 rounded-sm border border-[#e6dfdc]">
-                  <p className="text-[10px] text-[#6b6463] uppercase font-semibold">Wards</p>
-                  <p className="text-xs font-bold text-[#191414]">3 Wards</p>
-                </div>
-                <div className="bg-[#f4efed] py-1.5 px-1 rounded-sm border border-[#e6dfdc]">
-                  <p className="text-[10px] text-[#6b6463] uppercase font-semibold">Centers</p>
-                  <p className="text-xs font-bold text-[#191414]">12 Stations</p>
-                </div>
-                <div className="bg-[#f4efed] py-1.5 px-1 rounded-sm border border-[#e6dfdc]">
-                  <p className="text-[10px] text-[#6b6463] uppercase font-semibold">Voters</p>
-                  <p className="text-xs font-bold text-[#8e524d]">
-                    {totalConstituencyVoters.toLocaleString()}
-                  </p>
+              {/* Geographical Mappings - Smooth Accordion (On desktop placed under Hero) */}
+              <div className="ios-card overflow-hidden">
+                <button
+                  type="button"
+                  onClick={() => setShowWardsAccordion((prev) => !prev)}
+                  className="w-full p-3.5 flex items-center justify-between text-left cursor-pointer hover:bg-[#f4efed] transition-colors"
+                >
+                  <div className="flex items-center gap-2">
+                    <div className="w-6 h-6 rounded-sm bg-[#8e524d]/10 text-[#8e524d] flex items-center justify-center shrink-0">
+                      <MapPin className="w-3.5 h-3.5" />
+                    </div>
+                    <div>
+                      <h4 className="text-xs font-bold text-[#191414]">
+                        Constituency Wards & Polling Stations
+                      </h4>
+                      <p className="text-[10px] text-[#6b6463]">
+                        {showWardsAccordion
+                          ? "Tap to collapse mappings"
+                          : "3 Wards &bull; 12 Centers (Tap to explore)"}
+                      </p>
+                    </div>
+                  </div>
+
+                  <div
+                    className={`p-1 text-[#6b6463] transition-transform duration-300 ${
+                      showWardsAccordion ? "rotate-180" : ""
+                    }`}
+                  >
+                    <ChevronDown className="w-4 h-4" />
+                  </div>
+                </button>
+
+                {/* Smooth Grid Accordion Content */}
+                <div
+                  className={`grid transition-all duration-300 ease-in-out ${
+                    showWardsAccordion
+                      ? "grid-rows-[1fr] opacity-100 border-t border-[#e6dfdc]"
+                      : "grid-rows-[0fr] opacity-0"
+                  }`}
+                >
+                  <div className="overflow-hidden">
+                    <div className="p-3 space-y-2.5 bg-[#f4efed]">
+                      <p className="text-[10px] text-[#6b6463]">
+                        Tap any polling center below to pre-select it in the registration form:
+                      </p>
+
+                      <div className="space-y-2">
+                        {matunguWards.map((w) => (
+                          <div
+                            key={w.ward}
+                            className="bg-white rounded-sm border border-[#e6dfdc] p-2.5 space-y-1.5"
+                          >
+                            <div className="flex items-center justify-between">
+                              <div>
+                                <p className="text-xs font-bold text-[#191414]">
+                                  {w.ward} Ward
+                                </p>
+                                <p className="text-[10px] text-[#6b6463]">
+                                  {w.pollingStations.length} Designated Centers
+                                </p>
+                              </div>
+                              <div className="text-right">
+                                <p className="text-xs font-bold text-[#8e524d]">
+                                  {w.registeredVoters.toLocaleString()}
+                                </p>
+                                <p className="text-[10px] text-[#6b6463]">Voters</p>
+                              </div>
+                            </div>
+
+                            {/* Station Buttons */}
+                            <div className="pt-1 border-t border-[#e6dfdc] flex flex-wrap gap-1">
+                              {w.pollingStations.map((station) => (
+                                <button
+                                  key={station}
+                                  type="button"
+                                  onClick={() => {
+                                    setWard(w.ward);
+                                    setPollingStation(station);
+                                    window.scrollTo({ top: 120, behavior: "smooth" });
+                                  }}
+                                  className={`text-[10px] px-2 py-0.5 rounded-sm border transition-all cursor-pointer ${
+                                    ward === w.ward && pollingStation === station
+                                      ? "bg-[#8e524d] text-white border-[#8e524d] font-semibold"
+                                      : "bg-[#f4efed] text-[#191414] border-[#e6dfdc] hover:bg-[#e6dfdc]"
+                                  }`}
+                                >
+                                  {station}
+                                </button>
+                              ))}
+                            </div>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  </div>
                 </div>
               </div>
             </div>
 
-            {/* Error Banner */}
-            {error && (
-              <div className="bg-white border-l-4 border-red-600 text-red-800 p-3 rounded-sm border border-[#e6dfdc] text-xs flex items-start gap-2">
-                <div className="w-1.5 h-1.5 rounded-full bg-red-600 mt-1 shrink-0" />
-                <div>
-                  <p className="font-semibold text-[#191414]">Notice</p>
-                  <p className="text-[#6b6463] mt-0.5">{error}</p>
-                </div>
-              </div>
-            )}
-
-            {/* Registration Form Card */}
-            <form onSubmit={handleSubmit} className="ios-card p-4 space-y-3.5">
-              <div className="border-b border-[#e6dfdc] pb-2.5">
-                <h3 className="text-sm font-bold text-[#191414]">
-                  Volunteer Details
-                </h3>
-                <p className="text-[11px] text-[#6b6463]">
-                  Required for station roster and coordination updates.
-                </p>
-              </div>
-
-              {/* Full Name */}
-              <div>
-                <label className="block text-xs font-semibold text-[#191414] mb-1">
-                  Full Name <span className="text-red-500">*</span>
-                </label>
-                <div className="relative">
-                  <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-[#6b6463]">
-                    <User className="w-4 h-4" />
-                  </div>
-                  <input
-                    type="text"
-                    required
-                    value={fullName}
-                    onChange={(e) => setFullName(e.target.value)}
-                    placeholder="e.g. Wycliffe Omwitsa"
-                    className="ios-input pl-9"
-                  />
-                </div>
-              </div>
-
-              {/* Phone Number */}
-              <div>
-                <label className="block text-xs font-semibold text-[#191414] mb-1">
-                  Mobile Phone Number <span className="text-red-500">*</span>
-                </label>
-                <div className="relative">
-                  <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-[#6b6463]">
-                    <Phone className="w-4 h-4" />
-                  </div>
-                  <input
-                    type="tel"
-                    required
-                    value={phoneNumber}
-                    onChange={(e) => setPhoneNumber(e.target.value)}
-                    placeholder="0712 345 678 or +254 7..."
-                    className="ios-input pl-9"
-                  />
-                </div>
-                <p className="text-[10px] text-[#6b6463] mt-1 pl-0.5">
-                  Used for SMS station alerts and direct WhatsApp coordination.
-                </p>
-              </div>
-
-              {/* Ward Selection (Dropdown 1) */}
-              <div>
-                <label className="block text-xs font-semibold text-[#191414] mb-1">
-                  Select Ward <span className="text-red-500">*</span>
-                </label>
-                <div className="relative">
-                  <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-[#6b6463]">
-                    <MapPin className="w-4 h-4" />
-                  </div>
-                  <select
-                    required
-                    value={ward}
-                    onChange={handleWardChange}
-                    className="ios-input pl-9 pr-9 appearance-none bg-white cursor-pointer"
-                  >
-                    <option value="">-- Choose your Ward --</option>
-                    {matunguWards.map((w) => (
-                      <option key={w.ward} value={w.ward}>
-                        {w.ward} Ward ({w.registeredVoters.toLocaleString()} voters)
-                      </option>
-                    ))}
-                  </select>
-                  <div className="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none text-[#6b6463]">
-                    <ChevronDown className="w-4 h-4" />
-                  </div>
-                </div>
-              </div>
-
-              {/* Polling Station (Dropdown 2 - Cascading) */}
-              <div>
-                <div className="flex justify-between items-center mb-1">
-                  <label className="text-xs font-semibold text-[#191414]">
-                    Polling Station <span className="text-red-500">*</span>
-                  </label>
-                  {selectedWardData && (
-                    <span className="text-[10px] text-[#8e524d] font-semibold">
-                      {availableStations.length} stations in {ward}
-                    </span>
-                  )}
-                </div>
-                <div className="relative">
-                  <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-[#6b6463]">
-                    <Vote className="w-4 h-4" />
-                  </div>
-                  <select
-                    required
-                    disabled={!ward}
-                    value={pollingStation}
-                    onChange={(e) => setPollingStation(e.target.value)}
-                    className="ios-input pl-9 pr-9 appearance-none bg-white cursor-pointer disabled:bg-[#f4efed] disabled:text-[#6b6463] disabled:cursor-not-allowed"
-                  >
-                    <option value="">
-                      {ward
-                        ? `-- Choose polling station in ${ward} --`
-                        : "-- Select Ward First --"}
-                    </option>
-                    {availableStations.map((station) => (
-                      <option key={station} value={station}>
-                        {station}
-                      </option>
-                    ))}
-                  </select>
-                  <div className="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none text-[#6b6463]">
-                    <ChevronDown className="w-4 h-4" />
-                  </div>
-                </div>
-              </div>
-
-              {/* Focus / Notes (Optional) */}
-              <div>
-                <label className="block text-xs font-semibold text-[#191414] mb-1">
-                  Volunteer Focus (Optional)
-                </label>
-                <input
-                  type="text"
-                  value={notes}
-                  onChange={(e) => setNotes(e.target.value)}
-                  placeholder="e.g. Polling day agent, Youth mobilization, Logistics"
-                  className="ios-input"
-                />
-              </div>
-
-              {/* Submit CTA */}
-              <div className="pt-1.5">
-                <button
-                  type="submit"
-                  disabled={loading}
-                  className="ios-button-primary cursor-pointer disabled:opacity-60"
-                >
-                  {loading ? (
-                    <span className="flex items-center gap-2">
-                      <span className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
-                      Registering...
-                    </span>
-                  ) : (
-                    <>
-                      <span>Join as Volunteer</span>
-                      <ArrowRight className="w-4 h-4" />
-                    </>
-                  )}
-                </button>
-              </div>
-
-              <p className="text-[10px] text-center text-[#6b6463]">
-                Official volunteer registry for Matungu Constituency &bull; 2027 - 2028.
-              </p>
-            </form>
-
-            {/* Geographical Mappings - Smooth Accordion */}
-            <div className="ios-card overflow-hidden">
-              <button
-                type="button"
-                onClick={() => setShowWardsAccordion((prev) => !prev)}
-                className="w-full p-3.5 flex items-center justify-between text-left cursor-pointer hover:bg-[#f4efed] transition-colors"
-              >
-                <div className="flex items-center gap-2">
-                  <div className="w-6 h-6 rounded-sm bg-[#8e524d]/10 text-[#8e524d] flex items-center justify-center shrink-0">
-                    <MapPin className="w-3.5 h-3.5" />
-                  </div>
+            {/* Right Column (Volunteer Registration Form on LG) */}
+            <div className="lg:col-span-7">
+              {/* Error Banner */}
+              {error && (
+                <div className="bg-white border-l-4 border-red-600 text-red-800 p-3 rounded-sm border border-[#e6dfdc] text-xs flex items-start gap-2 mb-3">
+                  <div className="w-1.5 h-1.5 rounded-full bg-red-600 mt-1 shrink-0" />
                   <div>
-                    <h4 className="text-xs font-bold text-[#191414]">
-                      Constituency Wards & Polling Stations
-                    </h4>
-                    <p className="text-[10px] text-[#6b6463]">
-                      {showWardsAccordion
-                        ? "Tap to collapse mappings"
-                        : "3 Wards &bull; 12 Centers (Tap to explore)"}
-                    </p>
+                    <p className="font-semibold text-[#191414]">Notice</p>
+                    <p className="text-[#6b6463] mt-0.5">{error}</p>
+                  </div>
+                </div>
+              )}
+
+              {/* Registration Form Card */}
+              <form onSubmit={handleSubmit} className="ios-card p-4 sm:p-5 lg:p-6 space-y-4">
+                <div className="border-b border-[#e6dfdc] pb-3">
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <h3 className="text-base font-bold text-[#191414]">
+                        Volunteer Registration
+                      </h3>
+                      <p className="text-xs text-[#6b6463] mt-0.5">
+                        Join the ground mobilization network across Matungu Constituency.
+                      </p>
+                    </div>
+                    <span className="hidden sm:inline-block text-[11px] font-semibold text-[#8e524d] bg-[#8e524d]/10 px-2.5 py-1 rounded-sm border border-[#8e524d]/20">
+                      Team Shemaiah
+                    </span>
                   </div>
                 </div>
 
-                <div
-                  className={`p-1 text-[#6b6463] transition-transform duration-300 ${
-                    showWardsAccordion ? "rotate-180" : ""
-                  }`}
-                >
-                  <ChevronDown className="w-4 h-4" />
-                </div>
-              </button>
-
-              {/* Smooth Grid Accordion Content */}
-              <div
-                className={`grid transition-all duration-300 ease-in-out ${
-                  showWardsAccordion
-                    ? "grid-rows-[1fr] opacity-100 border-t border-[#e6dfdc]"
-                    : "grid-rows-[0fr] opacity-0"
-                }`}
-              >
-                <div className="overflow-hidden">
-                  <div className="p-3 space-y-2.5 bg-[#f4efed]">
-                    <p className="text-[10px] text-[#6b6463]">
-                      Tap any polling center below to pre-select it in the registration form:
-                    </p>
-
-                    <div className="space-y-2">
-                      {matunguWards.map((w) => (
-                        <div
-                          key={w.ward}
-                          className="bg-white rounded-sm border border-[#e6dfdc] p-2.5 space-y-1.5"
-                        >
-                          <div className="flex items-center justify-between">
-                            <div>
-                              <p className="text-xs font-bold text-[#191414]">
-                                {w.ward} Ward
-                              </p>
-                              <p className="text-[10px] text-[#6b6463]">
-                                {w.pollingStations.length} Designated Centers
-                              </p>
-                            </div>
-                            <div className="text-right">
-                              <p className="text-xs font-bold text-[#8e524d]">
-                                {w.registeredVoters.toLocaleString()}
-                              </p>
-                              <p className="text-[10px] text-[#6b6463]">Voters</p>
-                            </div>
-                          </div>
-
-                          {/* Station Buttons */}
-                          <div className="pt-1 border-t border-[#e6dfdc] flex flex-wrap gap-1">
-                            {w.pollingStations.map((station) => (
-                              <button
-                                key={station}
-                                type="button"
-                                onClick={() => {
-                                  setWard(w.ward);
-                                  setPollingStation(station);
-                                  window.scrollTo({ top: 440, behavior: "smooth" });
-                                }}
-                                className={`text-[10px] px-2 py-0.5 rounded-sm border transition-all cursor-pointer ${
-                                  ward === w.ward && pollingStation === station
-                                    ? "bg-[#8e524d] text-white border-[#8e524d] font-semibold"
-                                    : "bg-[#f4efed] text-[#191414] border-[#e6dfdc] hover:bg-[#e6dfdc]"
-                                }`}
-                              >
-                                {station}
-                              </button>
-                            ))}
-                          </div>
-                        </div>
-                      ))}
+                <div className="space-y-4">
+                  {/* Full Name */}
+                  <div>
+                    <label className="block text-xs font-semibold text-[#191414] mb-1.5">
+                      Full Legal Name <span className="text-red-500">*</span>
+                    </label>
+                    <div className="relative">
+                      <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-[#6b6463]">
+                        <User className="w-4 h-4" />
+                      </div>
+                      <input
+                        type="text"
+                        required
+                        value={fullName}
+                        onChange={(e) => setFullName(e.target.value)}
+                        placeholder="e.g. Wycliffe Omwitsa"
+                        className="ios-input pl-9"
+                      />
                     </div>
                   </div>
+
+                  {/* Phone Number */}
+                  <div>
+                    <label className="block text-xs font-semibold text-[#191414] mb-1.5">
+                      Mobile Phone Number <span className="text-red-500">*</span>
+                    </label>
+                    <div className="relative">
+                      <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-[#6b6463]">
+                        <Phone className="w-4 h-4" />
+                      </div>
+                      <input
+                        type="tel"
+                        required
+                        value={phoneNumber}
+                        onChange={(e) => setPhoneNumber(e.target.value)}
+                        placeholder="0712 345 678 or +254 7..."
+                        className="ios-input pl-9"
+                      />
+                    </div>
+                    <p className="text-[10px] text-[#6b6463] mt-1 pl-0.5">
+                      Used for SMS station alerts and direct WhatsApp coordination.
+                    </p>
+                  </div>
+
+                  {/* 2 Cascading Dropdowns: Ward & Polling Station */}
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
+                    {/* Ward Selection (Dropdown 1) */}
+                    <div>
+                      <label className="block text-xs font-semibold text-[#191414] mb-1.5">
+                        Select Ward <span className="text-red-500">*</span>
+                      </label>
+                      <div className="relative">
+                        <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-[#6b6463]">
+                          <MapPin className="w-4 h-4" />
+                        </div>
+                        <select
+                          required
+                          value={ward}
+                          onChange={handleWardChange}
+                          className="ios-input pl-9 pr-9 appearance-none bg-white cursor-pointer"
+                        >
+                          <option value="">-- Choose Ward --</option>
+                          {matunguWards.map((w) => (
+                            <option key={w.ward} value={w.ward}>
+                              {w.ward} Ward ({w.registeredVoters.toLocaleString()} voters)
+                            </option>
+                          ))}
+                        </select>
+                        <div className="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none text-[#6b6463]">
+                          <ChevronDown className="w-4 h-4" />
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* Polling Station (Dropdown 2 - Cascading) */}
+                    <div>
+                      <div className="flex justify-between items-center mb-1.5">
+                        <label className="text-xs font-semibold text-[#191414]">
+                          Polling Station <span className="text-red-500">*</span>
+                        </label>
+                        {selectedWardData && (
+                          <span className="text-[10px] text-[#8e524d] font-semibold">
+                            {availableStations.length} in {ward}
+                          </span>
+                        )}
+                      </div>
+                      <div className="relative">
+                        <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-[#6b6463]">
+                          <Vote className="w-4 h-4" />
+                        </div>
+                        <select
+                          required
+                          disabled={!ward}
+                          value={pollingStation}
+                          onChange={(e) => setPollingStation(e.target.value)}
+                          className="ios-input pl-9 pr-9 appearance-none bg-white cursor-pointer disabled:bg-[#f4efed] disabled:text-[#6b6463] disabled:cursor-not-allowed"
+                        >
+                          <option value="">
+                            {ward
+                              ? `-- Choose station in ${ward} --`
+                              : "-- Select Ward First --"}
+                          </option>
+                          {availableStations.map((station) => (
+                            <option key={station} value={station}>
+                              {station}
+                            </option>
+                          ))}
+                        </select>
+                        <div className="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none text-[#6b6463]">
+                          <ChevronDown className="w-4 h-4" />
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Focus / Notes (Optional) */}
+                  <div>
+                    <label className="block text-xs font-semibold text-[#191414] mb-1.5">
+                      Volunteer Focus / Role (Optional)
+                    </label>
+                    <input
+                      type="text"
+                      value={notes}
+                      onChange={(e) => setNotes(e.target.value)}
+                      placeholder="e.g. Polling day agent, Youth mobilization, Logistics"
+                      className="ios-input"
+                    />
+                  </div>
                 </div>
-              </div>
+
+                {/* Submit CTA */}
+                <div className="pt-2">
+                  <button
+                    type="submit"
+                    disabled={loading}
+                    className="ios-button-primary cursor-pointer disabled:opacity-60 text-sm py-3"
+                  >
+                    {loading ? (
+                      <span className="flex items-center gap-2">
+                        <span className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
+                        Submitting Registration...
+                      </span>
+                    ) : (
+                      <>
+                        <span>Join as Volunteer</span>
+                        <ArrowRight className="w-4 h-4" />
+                      </>
+                    )}
+                  </button>
+                </div>
+
+                <p className="text-[10px] text-center text-[#6b6463] pt-1">
+                  Official volunteer registry for Matungu Constituency &bull; 2027 - 2028.
+                </p>
+              </form>
             </div>
           </div>
         )}
       </main>
 
       {/* Floating Bottom Coordinator Dock */}
-      <footer className="max-w-md mx-auto w-full px-3.5 mt-5">
+      <footer className="max-w-md lg:max-w-lg mx-auto w-full px-3.5 mt-6">
         <div className="bg-white rounded-sm border border-[#e6dfdc] p-1.5 flex items-center justify-around shadow-xs">
           <Link
             href="/"
