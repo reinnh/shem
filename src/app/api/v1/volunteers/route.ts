@@ -19,8 +19,10 @@ const volunteerSchema = z.object({
   }),
   pollingStation: z
     .string()
-    .min(2, "Please select your polling station"),
+    .min(2, "Please select your landmark"),
   isOtherStation: z.boolean().optional().default(false),
+  volunteerRole: z.string().max(100).optional().default("Mobilizer"),
+  isCommitted: z.boolean().optional().default(true),
   occupation: z.string().max(120).optional(),
   educationLevel: z.string().max(100).optional(),
   comment: z.string().max(1000).optional(),
@@ -37,12 +39,12 @@ export async function POST(req: NextRequest) {
       return createApiError(firstError, 422, validated.error.format());
     }
 
-    // Verify polling station belongs to the selected ward — unless "Other" was selected
+    // Verify landmark belongs to the selected ward — unless "Other" was selected
     if (!validated.data.isOtherStation) {
       const wardData = matunguWards.find((w) => w.ward === validated.data.ward);
       if (!wardData || !wardData.pollingStations.includes(validated.data.pollingStation)) {
         return createApiError(
-          `Selected station '${validated.data.pollingStation}' is not in ${validated.data.ward} ward.`,
+          `Selected landmark '${validated.data.pollingStation}' is not in ${validated.data.ward} ward.`,
           422
         );
       }

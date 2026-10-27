@@ -18,6 +18,8 @@ export interface Volunteer {
   ward: string;
   pollingStation: string;
   isOtherStation?: boolean;
+  volunteerRole?: string;
+  isCommitted?: boolean;
   occupation?: string;
   educationLevel?: string;
   comment?: string;
@@ -33,6 +35,8 @@ export interface VolunteerInput {
   ward: string;
   pollingStation: string;
   isOtherStation?: boolean;
+  volunteerRole?: string;
+  isCommitted?: boolean;
   occupation?: string;
   educationLevel?: string;
   comment?: string;

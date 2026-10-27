@@ -6,6 +6,8 @@ export interface IVolunteer extends Document {
   ward: string;
   pollingStation: string;
   isOtherStation: boolean;
+  volunteerRole?: string;
+  isCommitted?: boolean;
   occupation?: string;
   educationLevel?: string;
   comment?: string;
@@ -45,6 +47,16 @@ const VolunteerSchema = new Schema<IVolunteer>(
     isOtherStation: {
       type: Boolean,
       default: false,
+    },
+    volunteerRole: {
+      type: String,
+      trim: true,
+      default: "Mobilizer",
+      maxlength: 100,
+    },
+    isCommitted: {
+      type: Boolean,
+      default: true,
     },
     occupation: {
       type: String,

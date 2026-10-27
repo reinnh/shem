@@ -123,7 +123,8 @@ export default function AdminDashboardPage() {
         const matchesStation = item.pollingStation.toLowerCase().includes(q);
         const matchesOccupation = (item.occupation || "").toLowerCase().includes(q);
         const matchesEducation = (item.educationLevel || "").toLowerCase().includes(q);
-        if (!matchesName && !matchesPhone && !matchesStation && !matchesOccupation && !matchesEducation) return false;
+        const matchesRole = (item.volunteerRole || "").toLowerCase().includes(q);
+        if (!matchesName && !matchesPhone && !matchesStation && !matchesOccupation && !matchesEducation && !matchesRole) return false;
       }
       return true;
     });
@@ -318,7 +319,7 @@ export default function AdminDashboardPage() {
                 {volunteers.filter((v) => v.ward === w.ward).length}
               </p>
               <p className="text-[10px] text-[#6b7280] mt-1">
-                {w.pollingStations.length} stations
+                {w.pollingStations.length} landmarks
               </p>
             </div>
           ))}
@@ -336,7 +337,7 @@ export default function AdminDashboardPage() {
                 type="text"
                 value={search}
                 onChange={(e) => setSearch(e.target.value)}
-                placeholder="Search volunteer name, phone, station..."
+                placeholder="Search volunteer, phone, landmark, role..."
                 className="ios-input ios-input-icon !pl-10 text-xs"
               />
               {search && (
@@ -366,13 +367,13 @@ export default function AdminDashboardPage() {
               ))}
             </select>
 
-            {/* Station Selector */}
+            {/* Station / Landmark Selector */}
             <select
               value={selectedStation}
               onChange={(e) => setSelectedStation(e.target.value)}
               className="ios-input sm:w-56 text-xs bg-white cursor-pointer"
             >
-              <option value="ALL">All Polling Stations</option>
+              <option value="ALL">All Landmarks</option>
               {availableStationsForFilter.map((station) => (
                 <option key={station} value={station}>
                   {station}
@@ -435,12 +436,17 @@ export default function AdminDashboardPage() {
                 <div key={vol._id} className="ios-card p-4 space-y-2.5">
                   <div className="flex items-start justify-between">
                     <div>
-                      <h4 className="text-sm font-bold text-[#111827]">{vol.fullName}</h4>
+                      <div className="flex items-center gap-1.5 flex-wrap">
+                        <h4 className="text-sm font-bold text-[#111827]">{vol.fullName}</h4>
+                        <span className="text-[10px] font-semibold bg-[#8e524d]/10 text-[#8e524d] px-2 py-0.5 rounded-sm border border-[#8e524d]/20">
+                          {vol.volunteerRole || "Mobilizer"}
+                        </span>
+                      </div>
                       <p className="text-xs text-[#6b7280] flex items-center gap-1 mt-0.5">
                         <MapPin className="w-3 h-3 text-[#8e524d]" />
-                        {vol.ward} &bull; {vol.pollingStation}
+                        <span>{vol.ward} &bull; {vol.pollingStation}</span>
                         {vol.isOtherStation && (
-                          <span className="text-[#8e524d] text-[10px]">(Other)</span>
+                          <span className="text-[#8e524d] text-[10px]">(Custom)</span>
                         )}
                       </p>
                     </div>
@@ -519,10 +525,11 @@ export default function AdminDashboardPage() {
                   <tr>
                     <th className="px-4 py-3">Volunteer</th>
                     <th className="px-4 py-3">Phone</th>
+                    <th className="px-4 py-3">Role</th>
                     <th className="px-4 py-3">Kazi</th>
                     <th className="px-4 py-3">Education</th>
                     <th className="px-4 py-3">Ward</th>
-                    <th className="px-4 py-3">Polling Station</th>
+                    <th className="px-4 py-3">Landmark</th>
                     <th className="px-4 py-3">Status</th>
                     <th className="px-4 py-3 text-right">Actions</th>
                   </tr>
@@ -550,6 +557,11 @@ export default function AdminDashboardPage() {
                         >
                           {vol.phoneNumber}
                         </a>
+                      </td>
+                      <td className="px-4 py-3">
+                        <span className="text-[11px] font-semibold bg-[#8e524d]/10 text-[#8e524d] px-2 py-0.5 rounded-sm whitespace-nowrap">
+                          {vol.volunteerRole || "Mobilizer"}
+                        </span>
                       </td>
                       <td className="px-4 py-3 text-[#6b7280]">{vol.occupation || <span className="text-[#d8cfcb]">—</span>}</td>
                       <td className="px-4 py-3 text-[#6b7280]">{vol.educationLevel || <span className="text-[#d8cfcb]">—</span>}</td>

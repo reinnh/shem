@@ -15,11 +15,14 @@ import {
   MessageSquare,
   HelpCircle,
   GraduationCap,
+  Award,
+  CheckSquare,
 } from "lucide-react";
 import { matunguWards, totalPollingStations } from "@/constants/matungu-wards";
 import { ApiResponse, Volunteer } from "@/types";
 
 const OTHER_STATION = "__OTHER__";
+const OTHER_ROLE = "Other (Specify)";
 
 export default function VolunteerRegistrationPage() {
   const [fullName, setFullName] = useState("");
@@ -28,6 +31,9 @@ export default function VolunteerRegistrationPage() {
   const [pollingStation, setPollingStation] = useState("");
   const [isOtherStation, setIsOtherStation] = useState(false);
   const [otherStationText, setOtherStationText] = useState("");
+  const [volunteerRole, setVolunteerRole] = useState("Mobilizer (Ground Agent)");
+  const [otherRoleText, setOtherRoleText] = useState("");
+  const [isCommitted, setIsCommitted] = useState(true);
   const [occupation, setOccupation] = useState("");
   const [educationLevel, setEducationLevel] = useState("");
   const [comment, setComment] = useState("");
@@ -85,16 +91,22 @@ export default function VolunteerRegistrationPage() {
     }
 
     if (!pollingStation) {
-      setError("Please select your Polling Station.");
+      setError("Please select your Landmark.");
       return;
     }
 
     if (isOtherStation && !otherStationText.trim()) {
-      setError("Please describe your polling station / location.");
+      setError("Please describe your landmark or location.");
+      return;
+    }
+
+    if (!isCommitted) {
+      setError("Please confirm your commitment by checking the pledge box.");
       return;
     }
 
     const finalStation = isOtherStation ? otherStationText.trim() : pollingStation;
+    const finalRole = volunteerRole === OTHER_ROLE && otherRoleText.trim() ? otherRoleText.trim() : volunteerRole;
 
     setLoading(true);
 
@@ -108,6 +120,8 @@ export default function VolunteerRegistrationPage() {
           ward,
           pollingStation: finalStation,
           isOtherStation,
+          volunteerRole: finalRole,
+          isCommitted,
           occupation: occupation.trim(),
           educationLevel: educationLevel.trim(),
           comment: comment.trim(),
@@ -135,6 +149,9 @@ export default function VolunteerRegistrationPage() {
     setPollingStation("");
     setIsOtherStation(false);
     setOtherStationText("");
+    setVolunteerRole("Mobilizer (Ground Agent)");
+    setOtherRoleText("");
+    setIsCommitted(true);
     setOccupation("");
     setEducationLevel("");
     setComment("");
@@ -201,12 +218,19 @@ export default function VolunteerRegistrationPage() {
               </div>
               <div className="h-px bg-[#e6dfdc]" />
               <div className="flex justify-between items-start text-xs">
-                <span className="text-[#6b6463]">Polling Station</span>
+                <span className="text-[#6b6463]">Landmark</span>
                 <span className="font-semibold text-[#191414] text-right max-w-[65%]">
                   {successVolunteer.pollingStation}
                   {successVolunteer.isOtherStation && (
                     <span className="text-[#8e524d] text-[10px] block">Not in list</span>
                   )}
+                </span>
+              </div>
+              <div className="h-px bg-[#e6dfdc]" />
+              <div className="flex justify-between items-center text-xs">
+                <span className="text-[#6b6463]">Volunteer As</span>
+                <span className="font-semibold text-[#8e524d]">
+                  {successVolunteer.volunteerRole || "Mobilizer"}
                 </span>
               </div>
               <div className="h-px bg-[#e6dfdc]" />
@@ -232,6 +256,13 @@ export default function VolunteerRegistrationPage() {
                   </div>
                 </>
               )}
+              <div className="h-px bg-[#e6dfdc]" />
+              <div className="flex justify-between items-center text-xs">
+                <span className="text-[#6b6463]">Commitment</span>
+                <span className="font-semibold text-emerald-700">
+                  Confirmed Pledge ✓
+                </span>
+              </div>
               <div className="h-px bg-[#e6dfdc]" />
               <div className="flex justify-between items-center text-xs">
                 <span className="text-[#6b6463]">Status</span>
@@ -319,8 +350,8 @@ export default function VolunteerRegistrationPage() {
                     <p className="text-xs font-bold text-[#191414]">{matunguWards.length} Wards</p>
                   </div>
                   <div className="bg-[#f4efed] py-1.5 px-1 rounded-sm border border-[#e6dfdc]">
-                    <p className="text-[10px] text-[#6b6463] uppercase font-semibold">Centers</p>
-                    <p className="text-xs font-bold text-[#191414]">{totalPollingStations} Stations</p>
+                    <p className="text-[10px] text-[#6b6463] uppercase font-semibold">Landmarks</p>
+                    <p className="text-xs font-bold text-[#191414]">{totalPollingStations} Landmarks</p>
                   </div>
                 </div>
               </div>
@@ -338,12 +369,12 @@ export default function VolunteerRegistrationPage() {
                     </div>
                     <div>
                       <h4 className="text-xs font-bold text-[#191414]">
-                        Constituency Wards & Polling Stations
+                        Constituency Wards & Landmarks
                       </h4>
                       <p className="text-[10px] text-[#6b6463]">
                         {showWardsAccordion
                           ? "Tap to collapse mappings"
-                          : `${matunguWards.length} Wards • ${totalPollingStations} Centers (Tap to explore)`}
+                          : `${matunguWards.length} Wards • ${totalPollingStations} Landmarks (Tap to explore)`}
                       </p>
                     </div>
                   </div>
@@ -368,7 +399,7 @@ export default function VolunteerRegistrationPage() {
                   <div className="overflow-hidden">
                     <div className="p-3 space-y-2.5 bg-[#f4efed]">
                       <p className="text-[10px] text-[#6b6463]">
-                        Tap any polling center below to pre-select it in the registration form:
+                        Tap any designated landmark below to pre-select it in the registration form:
                       </p>
 
                       <div className="space-y-2">
@@ -383,7 +414,7 @@ export default function VolunteerRegistrationPage() {
                                   {w.ward} Ward
                                 </p>
                                 <p className="text-[10px] text-[#6b6463]">
-                                  {w.pollingStations.length} Designated Centers
+                                  {w.pollingStations.length} Landmarks
                                 </p>
                               </div>
                             </div>
@@ -549,7 +580,58 @@ export default function VolunteerRegistrationPage() {
                     </div>
                   </div>
 
-                  {/* 2 Cascading Dropdowns: Ward & Polling Station */}
+                  {/* Volunteer As (Role) Dropdown */}
+                  <div>
+                    <label className="block text-xs font-semibold text-[#191414] mb-1.5 flex items-center justify-between">
+                      <span className="flex items-center gap-1.5">
+                        <Award className="w-3.5 h-3.5 text-[#8e524d]" />
+                        <span>Volunteer As</span>
+                        <span className="text-red-500">*</span>
+                      </span>
+                      <span className="text-[10px] font-normal text-[#6b6463]">Select your primary capacity</span>
+                    </label>
+                    <div className="relative">
+                      <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-[#6b6463]">
+                        <Award className="w-4 h-4" />
+                      </div>
+                      <select
+                        required
+                        value={volunteerRole}
+                        onChange={(e) => setVolunteerRole(e.target.value)}
+                        className="ios-input ios-input-icon ios-select-icon !pl-11 !pr-9 appearance-none bg-white cursor-pointer"
+                      >
+                        <option value="Mobilizer (Ground Agent)">Mobilizer (Ground Agent)</option>
+                        <option value="Campaign Team & Strategy">Campaign Team & Strategy</option>
+                        <option value="Sponsor & Well Wisher">Sponsor & Well Wisher</option>
+                        <option value="Blogger & Social Media">Blogger & Social Media</option>
+                        <option value="Media & Communications">Media & Communications</option>
+                        <option value="Office & Administration">Office & Administration</option>
+                        <option value="Women League Leader">Women League Leader</option>
+                        <option value="Youth & Bodaboda Mobilizer">Youth & Bodaboda Mobilizer</option>
+                        <option value="Polling Day Agent">Polling Day Agent</option>
+                        <option value="Logistics & Transport">Logistics & Transport</option>
+                        <option value={OTHER_ROLE}>Other (Specify)</option>
+                      </select>
+                      <div className="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none text-[#6b6463]">
+                        <ChevronDown className="w-4 h-4" />
+                      </div>
+                    </div>
+
+                    {volunteerRole === OTHER_ROLE && (
+                      <div className="mt-2 relative">
+                        <input
+                          type="text"
+                          required
+                          value={otherRoleText}
+                          onChange={(e) => setOtherRoleText(e.target.value)}
+                          placeholder="Please specify how you wish to volunteer..."
+                          className="ios-input text-xs"
+                        />
+                      </div>
+                    )}
+                  </div>
+
+                  {/* 2 Cascading Dropdowns: Ward & Landmark */}
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
                     {/* Ward Selection (Dropdown 1) */}
                     <div>
@@ -579,11 +661,11 @@ export default function VolunteerRegistrationPage() {
                       </div>
                     </div>
 
-                    {/* Polling Station (Dropdown 2 - Cascading) */}
+                    {/* Landmark (Dropdown 2 - Cascading) */}
                     <div>
                       <div className="flex justify-between items-center mb-1.5">
                         <label className="text-xs font-semibold text-[#191414]">
-                          Polling Station <span className="text-red-500">*</span>
+                          Select Landmark <span className="text-red-500">*</span>
                         </label>
                         {selectedWardData && (
                           <span className="text-[10px] text-[#8e524d] font-semibold">
@@ -604,7 +686,7 @@ export default function VolunteerRegistrationPage() {
                         >
                           <option value="">
                             {ward
-                              ? `-- Choose station in ${ward} --`
+                              ? `-- Choose Landmark in ${ward} --`
                               : "-- Select Ward First --"}
                           </option>
                           {availableStations.map((station) => (
@@ -614,7 +696,7 @@ export default function VolunteerRegistrationPage() {
                           ))}
                           {ward && (
                             <option value={OTHER_STATION}>
-                              ⚠ My station is not listed above
+                              ⚠ My landmark is not listed above
                             </option>
                           )}
                         </select>
@@ -625,13 +707,13 @@ export default function VolunteerRegistrationPage() {
                     </div>
                   </div>
 
-                  {/* "Other" Station Text Input — shown when user selects "not listed" */}
+                  {/* "Other" Landmark Text Input — shown when user selects "not listed" */}
                   {isOtherStation && (
                     <div className="bg-[#f4efed] border border-[#e6dfdc] rounded-sm p-3 space-y-2">
                       <div className="flex items-start gap-2">
                         <HelpCircle className="w-4 h-4 text-[#8e524d] shrink-0 mt-0.5" />
                         <p className="text-[11px] text-[#6b6463]">
-                          No problem — please type the name of your polling station or the nearest landmark below. Our team will verify and update your details.
+                          No problem — please type the name of your landmark or nearest center below. Our team will verify and record your location.
                         </p>
                       </div>
                       <div className="relative">
@@ -642,7 +724,7 @@ export default function VolunteerRegistrationPage() {
                           type="text"
                           value={otherStationText}
                           onChange={(e) => setOtherStationText(e.target.value)}
-                          placeholder="e.g. Lugari Primary, near Matungu Market..."
+                          placeholder="e.g. Near Matungu Market, Musango Center..."
                           className="ios-input ios-input-icon !pl-11"
                           required
                         />
@@ -674,6 +756,28 @@ export default function VolunteerRegistrationPage() {
                         {comment.length}/1000
                       </p>
                     )}
+                  </div>
+
+                  {/* Commitment Checkbox ("Are you really committed") */}
+                  <div className="bg-[#f4efed] border border-[#e6dfdc] rounded-sm p-3 transition-colors hover:border-[#8e524d]/40">
+                    <label className="flex items-start gap-2.5 cursor-pointer select-none">
+                      <input
+                        type="checkbox"
+                        required
+                        checked={isCommitted}
+                        onChange={(e) => setIsCommitted(e.target.checked)}
+                        className="mt-0.5 w-4 h-4 rounded-xs text-[#8e524d] accent-[#8e524d] cursor-pointer"
+                      />
+                      <div className="text-xs">
+                        <span className="font-bold text-[#191414] flex items-center gap-1">
+                          <span>Are you really committed?</span>
+                          <span className="text-red-500">*</span>
+                        </span>
+                        <p className="text-[11px] text-[#6b6463] mt-0.5 leading-snug">
+                          Yes, I confirm my voluntary commitment and active dedication to the ground campaign of Hon. Shemaiah S. Kong&apos;ani (2027 &bull; 2028).
+                        </p>
+                      </div>
+                    </label>
                   </div>
                 </div>
 
