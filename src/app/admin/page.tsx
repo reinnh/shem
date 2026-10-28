@@ -257,7 +257,7 @@ export default function AdminDashboardPage() {
                 </span>
               </div>
               <p className="text-[11px] text-[#6b7280]">
-                Matungu Constituency &bull; Hon. Shemaiah Kong&apos;ani 2027 &bull; 2028
+                Matungu Constituency &bull; Hon. Shemaiah Kong&apos;ani 2027
               </p>
             </div>
           </div>

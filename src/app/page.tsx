@@ -184,7 +184,7 @@ export default function VolunteerRegistrationPage() {
 
           <div className="flex items-center gap-2">
             <span className="text-[10px] font-bold text-[#8e524d] bg-[#8e524d]/10 px-2.5 py-0.5 rounded-sm border border-[#8e524d]/25 uppercase tracking-wide">
-              2027 &bull; 2028
+              2027
             </span>
           </div>
         </div>
@@ -207,7 +207,7 @@ export default function VolunteerRegistrationPage() {
               Welcome, {successVolunteer.fullName}!
             </h2>
             <p className="text-xs text-[#6b6463] mt-0.5 mb-5">
-              You are registered as a volunteer agent for Matungu Constituency (2027 - 2028).
+              You are registered as a volunteer agent for Matungu Constituency (2027).
             </p>
 
             {/* Receipt Summary Details */}
@@ -325,7 +325,7 @@ export default function VolunteerRegistrationPage() {
 
                     {/* Year Tag */}
                     <div className="bg-[#8e524d] text-white px-2.5 py-1 rounded-sm text-[10px] font-bold tracking-wider uppercase border border-white/20 shadow-sm">
-                      2027 &bull; 2028
+                      2027
                     </div>
                   </div>
 
@@ -774,7 +774,7 @@ export default function VolunteerRegistrationPage() {
                           <span className="text-red-500">*</span>
                         </span>
                         <p className="text-[11px] text-[#6b6463] mt-0.5 leading-snug">
-                          Yes, I confirm my voluntary commitment and active dedication to the ground campaign of Hon. Shemaiah S. Kong&apos;ani (2027 &bull; 2028).
+                          Yes, I confirm my voluntary commitment and active dedication to the ground campaign of Hon. Shemaiah S. Kong&apos;ani (2027).
                         </p>
                       </div>
                     </label>
@@ -803,7 +803,7 @@ export default function VolunteerRegistrationPage() {
                 </div>
 
                 <p className="text-[10px] text-center text-[#6b6463] pt-1">
-                  Official volunteer registry for Matungu Constituency &bull; 2027 - 2028.
+                  Official volunteer registry for Matungu Constituency &bull; 2027.
                 </p>
               </form>
             </div>
@@ -830,7 +830,7 @@ export default function VolunteerRegistrationPage() {
           </Link>
         </div>
         <p className="text-[10px] text-center text-[#6b6463] mt-2.5">
-          Matungu Constituency &bull; Team Hon. Shemaiah Kong&apos;ani 2027 - 2028
+          Matungu Constituency &bull; Team Hon. Shemaiah Kong&apos;ani 2027
         </p>
       </footer>
     </div>
